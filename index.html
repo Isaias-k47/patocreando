@@ -1,1336 +1,1228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PatoCreando | Sistemas Web de Alta Conversión & IA de Élite</title>
-  <meta name="description" content="Estrategia humana + Orquestación de Inteligencia Artificial para crear páginas web ultra rápidas (<0.6s) y de máxima conversión para creadores e infoproductores.">
-  <meta name="theme-color" content="#050507">
-
-  <!-- OpenGraph / Social Meta -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="PatoCreando | Sistemas Web de Ultra Alta Conversión con IA">
-  <meta property="og:description" content="No escribo código línea por línea. Orquesto IA para construir máquinas de venta web en tiempo récord.">
-
-  <!-- Preconnect & Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
-
-  <style>
-    /* ==========================================================================
-       1. DESIGN SYSTEM & TOKENS (DARK-LUXURY ATMOSPHERE)
-       ========================================================================== */
-    :root {
-      --bg-void: #050507;
-      --bg-surface-1: #0a0b12;
-      --bg-surface-2: #10121d;
-      --bg-card: rgba(14, 17, 28, 0.7);
-      --bg-card-hover: rgba(22, 26, 43, 0.85);
-
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-
-      --accent-emerald: #10b981;
-      --accent-emerald-glow: rgba(16, 185, 129, 0.35);
-      --accent-purple: #a855f7;
-      --accent-purple-glow: rgba(168, 85, 247, 0.3);
-      --accent-indigo: #6366f1;
-      --accent-indigo-glow: rgba(99, 102, 241, 0.25);
-      --accent-danger: #ef4444;
-      --accent-danger-glow: rgba(239, 68, 68, 0.35);
-
-      --border-subtle: rgba(255, 255, 255, 0.07);
-      --border-glass: rgba(255, 255, 255, 0.12);
-      --border-focus: rgba(16, 185, 129, 0.5);
-
-      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 24px;
-      --radius-xl: 32px;
-      --radius-full: 9999px;
-
-      --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background-color: var(--bg-void);
-      color: var(--text-primary);
-      font-family: var(--font-main);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-    }
-
-    body {
-      background-color: var(--bg-void);
-      color: var(--text-primary);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* Ambient Background Light Orbs */
-    .ambient-glow {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(140px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-    }
-
-    .glow-1 {
-      top: -10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 750px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(168, 85, 247, 0.08) 50%, transparent 80%);
-    }
-
-    .glow-2 {
-      top: 40%;
-      right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-    }
-
-    .glow-3 {
-      bottom: 5%;
-      left: -10%;
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
-    }
-
-    /* Noise Texture Overlay for High-End Depth */
-    .noise-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      content: "";
-      opacity: 0.025;
-      pointer-events: none;
-      z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
-
-    /* Layout Containers */
-    .container {
-      width: 100%;
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .section-padding {
-      padding: clamp(4.5rem, 8vw, 7.5rem) 0;
-    }
-
-    /* ==========================================================================
-       2. TYPOGRAPHY & GRADIENTS
-       ========================================================================== */
-    h1, h2, h3, h4 {
-      color: var(--text-primary);
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -0.035em;
-    }
-
-    p {
-      color: var(--text-secondary);
-      font-size: 1.08rem;
-      line-height: 1.7;
-      font-weight: 400;
-    }
-
-    .text-gradient-white {
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .text-gradient-purple {
-      background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #6366f1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .text-gradient-emerald {
-      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .text-gradient-danger {
-      background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* Section Headers */
-    .section-header {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 3.75rem;
-    }
-
-    .section-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent-purple);
-      background: rgba(168, 85, 247, 0.08);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      padding: 0.35rem 0.85rem;
-      border-radius: var(--radius-full);
-      margin-bottom: 1rem;
-    }
-
-    .section-title {
-      font-size: clamp(2.1rem, 4.2vw, 3.2rem);
-      margin-bottom: 1.25rem;
-    }
-
-    /* ==========================================================================
-       3. BUTTONS & INTERACTIVE LUXURY CTAS
-       ========================================================================== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      font-family: var(--font-main);
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 1.05rem 2.2rem;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      transition: var(--transition-smooth);
-      cursor: pointer;
-      border: none;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    .btn-luxury-primary {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      box-shadow: 0 12px 30px -8px var(--accent-emerald-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-luxury-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-      transition: all 0.6s ease;
-      z-index: -1;
-    }
-
-    .btn-luxury-primary:hover {
-      transform: translateY(-3px) scale(1.015);
-      box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-      filter: brightness(1.06);
-    }
-
-    .btn-luxury-primary:hover::before {
-      left: 100%;
-    }
-
-    .btn-secondary-ghost {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-glass);
-      color: var(--text-primary);
-      backdrop-filter: blur(14px);
-    }
-
-    .btn-secondary-ghost:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
-    }
-
-    .btn-sm {
-      padding: 0.6rem 1.25rem;
-      font-size: 0.875rem;
-      border-radius: var(--radius-sm);
-    }
-
-    .icon {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-      flex-shrink: 0;
-    }
-
-    /* Badge Pills */
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.45rem 1rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-full);
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      backdrop-filter: blur(12px);
-    }
-
-    .badge-pill.status {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.25);
-      color: #34d399;
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--accent-emerald);
-      border-radius: 50%;
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-
-    /* ==========================================================================
-       4. HEADER / NAVBAR
-       ========================================================================== */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(5, 5, 7, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 1.1rem 0;
-      transition: var(--transition-smooth);
-    }
-
-    .nav-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 1.3rem;
-      letter-spacing: -0.04em;
-    }
-
-    .brand-logo .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
-      border: 1px solid var(--border-glass);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-emerald);
-    }
-
-    .brand-logo span {
-      color: var(--accent-emerald);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    /* ==========================================================================
-       5. HERO SECTION (DISRUPTIVE HOOK)
-       ========================================================================== */
-    .hero-section {
-      padding: clamp(5rem, 10vw, 8rem) 0 clamp(3.5rem, 6vw, 5.5rem);
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-content {
-      max-width: 940px;
-      margin: 0 auto;
-    }
-
-    .hero-eyebrow {
-      margin-bottom: 1.75rem;
-    }
-
-    .hero-title {
-      font-size: clamp(2.4rem, 5.8vw, 4.4rem);
-      margin-bottom: 1.75rem;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1.1rem, 2.3vw, 1.4rem);
-      color: var(--text-secondary);
-      max-width: 780px;
-      margin: 0 auto 2.75rem;
-      line-height: 1.6;
-    }
-
-    .hero-cta-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.2rem;
-      margin-bottom: 3.5rem;
-    }
-
-    .cta-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      width: 100%;
-    }
-
-    .cta-microcopy {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Performance Snapshot Bar */
-    .proof-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
-      padding: 1.75rem 2rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.7);
-    }
-
-    .proof-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: relative;
-    }
-
-    .proof-item:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      right: -0.625rem;
-      top: 20%;
-      height: 60%;
-      width: 1px;
-      background: var(--border-subtle);
-    }
-
-    .proof-number {
-      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.1;
-      margin-bottom: 0.25rem;
-    }
-
-    .proof-label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
-    /* ==========================================================================
-       6. THE PARADIGM SHIFT: TRADITIONAL VS PATO CREANDO HYBRID AI
-       ========================================================================== */
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: stretch;
-    }
-
-    .compare-card {
-      padding: clamp(2rem, 4vw, 3rem);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      transition: var(--transition-smooth);
-    }
-
-    .compare-card.pain {
-      border-color: rgba(239, 68, 68, 0.2);
-      background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, rgba(14, 17, 28, 0.7) 100%);
-    }
-
-    .compare-card.solution {
-      border-color: rgba(168, 85, 247, 0.35);
-      background: linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, rgba(16, 185, 129, 0.04) 50%, rgba(14, 17, 28, 0.85) 100%);
-      box-shadow: 0 30px 60px -20px rgba(168, 85, 247, 0.15);
-    }
-
-    .compare-card.solution::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-emerald));
-    }
-
-    .card-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 0.4rem 0.9rem;
-      border-radius: var(--radius-sm);
-      margin-bottom: 1.5rem;
-      width: fit-content;
-    }
-
-    .card-badge.bad {
-      background: rgba(239, 68, 68, 0.12);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .card-badge.good {
-      background: rgba(168, 85, 247, 0.15);
-      color: #d8b4fe;
-      border: 1px solid rgba(168, 85, 247, 0.35);
-    }
-
-    .card-heading {
-      font-size: 1.65rem;
-      margin-bottom: 1rem;
-    }
-
-    .compare-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      margin-top: 1.25rem;
-    }
-
-    .compare-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      font-size: 0.98rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
-
-    .compare-list strong {
-      color: var(--text-primary);
-    }
-
-    .list-icon {
-      flex-shrink: 0;
-      margin-top: 2px;
-      font-size: 1.15rem;
-    }
-
-    /* ==========================================================================
-       7. THE SECRET ENGINE (HUMAN STRATEGY + AI VELOCITY)
-       ========================================================================== */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.75rem;
-    }
-
-    .pillar-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      transition: var(--transition-smooth);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .pillar-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(168, 85, 247, 0.4);
-      background: var(--bg-card-hover);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
-    }
-
-    .pillar-icon-wrap {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-md);
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-purple);
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
-    }
-
-    .pillar-title {
-      font-size: 1.35rem;
-      margin-bottom: 0.8rem;
-    }
-
-    /* ==========================================================================
-       8. TRAFFIC LOSS & REVENUE LEAK CALCULATOR
-       ========================================================================== */
-    .calculator-card {
-      background: linear-gradient(180deg, #0e111d 0%, #070910 100%);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: clamp(2rem, 5vw, 3.5rem);
-      box-shadow: 0 40px 80px -25px rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(24px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .calculator-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-danger), var(--accent-emerald), transparent);
-    }
-
-    .calculator-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 3rem;
-      align-items: center;
-    }
-
-    .calculator-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 2.2rem;
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .control-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .control-label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .control-value {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #34d399;
-      background: rgba(16, 185, 129, 0.1);
-      padding: 0.25rem 0.85rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-
-    /* Custom Slider */
-    .custom-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 8px;
-      border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.1);
-      outline: none;
-      transition: var(--transition-smooth);
-      cursor: pointer;
-    }
-
-    .custom-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #10b981;
-      border: 3px solid #050507;
-      box-shadow: 0 0 14px var(--accent-emerald);
-      cursor: grab;
-      transition: transform 0.15s ease, background-color 0.15s ease;
-    }
-
-    .custom-slider::-webkit-slider-thumb:active {
-      cursor: grabbing;
-      transform: scale(1.2);
-      background: #34d399;
-    }
-
-    .custom-slider::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #10b981;
-      border: 3px solid #050507;
-      box-shadow: 0 0 14px var(--accent-emerald);
-      cursor: grab;
-    }
-
-    .slider-ticks {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    /* Calculator Results Box */
-    .calculator-results {
-      background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(14, 17, 28, 0.9) 100%);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: var(--radius-lg);
-      padding: 2.25rem 2rem;
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      gap: 1.5rem;
-    }
-
-    .result-badge {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #f87171;
-    }
-
-    .lost-amount {
-      font-size: clamp(2.4rem, 4.5vw, 3.2rem);
-      font-weight: 800;
-      color: #ef4444;
-      line-height: 1;
-      text-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
-    }
-
-    .lost-annual {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 0.4rem;
-    }
-
-    .lost-metrics-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 1.1rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .metric-num {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .metric-desc {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      line-height: 1.35;
-    }
-
-    /* ==========================================================================
-       9. CASE STUDIES (PROOF OF SPEED & REVENUE)
-       ========================================================================== */
-    .cases-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.75rem;
-    }
-
-    .case-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: var(--transition-smooth);
-    }
-
-    .case-card:hover {
-      border-color: rgba(16, 185, 129, 0.4);
-      transform: translateY(-5px);
-    }
-
-    .creator-profile {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .creator-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-      border: 2px solid rgba(255, 255, 255, 0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .creator-info h4 {
-      font-size: 1.15rem;
-    }
-
-    .creator-info span {
-      font-size: 0.85rem;
-      color: var(--accent-emerald);
-      font-weight: 600;
-    }
-
-    .case-metric-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      margin: 1.25rem 0;
-    }
-
-    .case-quote {
-      font-style: italic;
-      font-size: 0.98rem;
-      color: var(--text-secondary);
-    }
-
-    /* ==========================================================================
-       10. ZERO FRICTION 3-STEP PROCESS & GUARANTEE
-       ========================================================================== */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.75rem;
-    }
-
-    .step-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: 2.25rem;
-      position: relative;
-    }
-
-    .step-number {
-      font-size: 3.2rem;
-      font-weight: 800;
-      line-height: 1;
-      color: rgba(255, 255, 255, 0.06);
-      margin-bottom: 0.8rem;
-    }
-
-    .guarantee-box {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: var(--radius-xl);
-      padding: 2.75rem 2rem;
-      text-align: center;
-      max-width: 860px;
-      margin: 3.5rem auto 0;
-      backdrop-filter: blur(16px);
-    }
-
-    /* ==========================================================================
-       11. FINAL CTA (THE CLOSER)
-       ========================================================================== */
-    .final-cta-card {
-      background: linear-gradient(180deg, #111422 0%, #080910 100%);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 3.5rem);
-      max-width: 920px;
-      margin: 0 auto;
-      text-align: center;
-      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 60px -10px rgba(168, 85, 247, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .final-cta-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
-    }
-
-    /* ==========================================================================
-       12. FOOTER & SCROLL REVEAL UTILITIES
-       ========================================================================== */
-    .site-footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 3rem 0;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .reveal-on-scroll {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
-    }
-
-    .reveal-on-scroll.is-revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Responsive Queries */
-    @media (max-width: 860px) {
-      .comparison-grid,
-      .calculator-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .proof-bar {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-      }
-
-      .proof-item:nth-child(2)::after {
-        display: none;
-      }
-
-      .btn-luxury-primary {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .proof-bar {
-        grid-template-columns: 1fr;
-      }
-      .proof-item::after {
-        display: none !important;
-      }
-      .header-actions .badge-pill {
-        display: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PatoCreando | Sistemas web de alta conversión orquestados con IA</title>
+<meta name="description" content="Sistemas web de ultra alta conversión para creadores e infoproductores. Estrategia humana + orquestación de IA. Online en 48 horas, cargando en menos de 0.6s.">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://patocreando.com/">
+
+<!-- Social -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="PatoCreando">
+<meta property="og:title" content="PatoCreando | Sistemas web de alta conversión orquestados con IA">
+<meta property="og:description" content="No escribo código línea por línea. Orquesto IA para construir máquinas de venta web en tiempo récord.">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon inline: cero requests extra -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23000'/%3E%3Cpath d='M13 3 5 13.5h6L10.5 21 19 10.5h-6L13 3z' fill='%2338bdf8'/%3E%3C/svg%3E">
+
+<!--
+  PERFORMANCE: la fuente se carga de forma NO bloqueante (preload + swap).
+  El primer paint usa la stack del sistema, así el FCP no depende de la red.
+  Solo 4 pesos (400/500/600/800) en lugar de 9 -> payload mínimo.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"></noscript>
+
+<style>
+/* ==========================================================================
+   PATOCREANDO - Design System
+   1. Tokens · 2. Reset · 3. Tipografía · 4. Layout · 5. Componentes base
+   6. Secciones · 7. Motion · 8. Responsive
+   Dirección de arte: negro OLED absoluto, hairlines semitransparentes,
+   un único acento (Ice Blue). Cero neón, cero ruido cromático.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Superficies */
+  --bg:            #000000;
+  --surface-1:     #0a0a0a;
+  --surface-2:     rgba(255, 255, 255, 0.024);
+  --surface-hover: rgba(255, 255, 255, 0.045);
+
+  /* Texto */
+  --fg:            #ededed;
+  --fg-secondary:  #a1a1aa;
+  --fg-muted:      #6f6f78;
+
+  /* Acento único */
+  --accent:        #38bdf8;
+  --accent-dim:    rgba(56, 189, 248, 0.14);
+  --accent-line:   rgba(56, 189, 248, 0.22);
+
+  /* Semánticos (uso quirúrgico) */
+  --positive:      #34d399;
+  --negative:      #f87171;
+
+  /* Hairlines */
+  --line:          rgba(255, 255, 255, 0.08);
+  --line-strong:   rgba(255, 255, 255, 0.16);
+
+  /* Tipografía */
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Radios */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-full: 9999px;
+
+  /* Motion - curvas Bézier tipo Linear */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io:   cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast:    0.16s var(--ease-io);
+  --t-base:    0.28s var(--ease-out);
+
+  /* Espaciado vertical de sección */
+  --section-y: clamp(4.5rem, 9vw, 8rem);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img, svg, video { display: block; max-width: 100%; }
+button, input { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* Foco accesible y consistente en toda la página */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+.skip-link {
+  position: absolute; left: 50%; top: 0.5rem; transform: translate(-50%, -200%);
+  background: var(--fg); color: #000; padding: 0.6rem 1.1rem;
+  border-radius: var(--r-full); font-size: 0.85rem; font-weight: 600; z-index: 200;
+  transition: transform var(--t-base);
+}
+.skip-link:focus { transform: translate(-50%, 0); }
+
+/* --------------------------------------------------------------------------
+   ATMÓSFERA - gradientes estáticos, sin filter:blur().
+   blur(140px) sobre 700px cuesta decenas de ms de paint por frame en el
+   navegador in-app de Instagram. Un radial-gradient fijo da el mismo look
+   a coste cero de GPU.
+   -------------------------------------------------------------------------- */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 50% -8%,  rgba(255, 255, 255, 0.07) 0%, transparent 65%),
+    radial-gradient(45% 35% at 88% 38%, rgba(56, 189, 248, 0.055) 0%, transparent 70%),
+    radial-gradient(50% 40% at 5% 92%,  rgba(56, 189, 248, 0.035) 0%, transparent 70%);
+}
+
+/* --------------------------------------------------------------------------
+   3. TIPOGRAFÍA
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  color: var(--fg);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+p { color: var(--fg-secondary); font-size: 1.0625rem; line-height: 1.68; text-wrap: pretty; }
+
+strong { color: var(--fg); font-weight: 600; }
+
+.text-gradient {
+  background: linear-gradient(160deg, #ffffff 12%, #8b8b93 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-gradient-accent {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   4. LAYOUT
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.section { padding-block: var(--section-y); position: relative; }
+
+/* Las secciones bajo el fold no se pintan hasta acercarse al viewport */
+.section.deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
+.section + .section { border-top: 1px solid var(--line); }
+
+.section-header { max-width: 720px; margin: 0 auto clamp(2.5rem, 5vw, 4rem); text-align: center; }
+.section-title  { font-size: clamp(1.9rem, 4vw, 3rem); margin-bottom: 1rem; }
+.section-header p { font-size: 1.0625rem; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-line);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--r-full);
+  margin-bottom: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. COMPONENTES BASE
+   -------------------------------------------------------------------------- */
+
+/* --- Botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.011em;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  white-space: nowrap;
+  transition: background var(--t-fast), border-color var(--t-fast),
+              transform var(--t-fast), box-shadow var(--t-base), color var(--t-fast);
+}
+
+.btn:active { transform: scale(0.978); }
+
+/* Primario: blanco sólido sobre negro (firma Vercel) + sheen deslizante */
+.btn-primary {
+  background: var(--fg);
+  color: #000;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.18) inset;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 -120%;
+  width: 55%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  transform: skewX(-18deg);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px -12px rgba(255, 255, 255, 0.45);
+  }
+  .btn-primary:hover::after { animation: sheen 0.75s var(--ease-io); }
+  .btn-ghost:hover { background: var(--surface-hover); border-color: var(--line-strong); }
+  .btn-ghost:hover .arrow { transform: translateX(3px); }
+}
+
+@keyframes sheen {
+  from { left: -120%; }
+  to   { left: 180%; }
+}
+
+.btn-ghost {
+  background: var(--surface-2);
+  border-color: var(--line);
+  color: var(--fg);
+}
+
+.btn-sm { padding: 0.55rem 1.05rem; font-size: 0.85rem; }
+.btn-block { width: 100%; }
+
+.arrow { transition: transform var(--t-fast); display: inline-block; }
+.btn .icon { width: 18px; height: 18px; flex: none; fill: currentColor; }
+
+/* --- Píldoras / badges --- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-secondary);
+  letter-spacing: -0.008em;
+}
+
+.pill strong { color: var(--fg); font-weight: 600; }
+
+.dot {
+  width: 6px; height: 6px; flex: none;
+  border-radius: 50%;
+  background: var(--positive);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.14);
+  animation: breathe 2.4s var(--ease-io) infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+/* --- Tarjetas --- */
+.card {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  position: relative;
+  transition: border-color var(--t-base), background var(--t-base), transform var(--t-base);
+}
+
+@media (hover: hover) {
+  .card.interactive:hover {
+    border-color: var(--line-strong);
+    background: var(--surface-hover);
+    transform: translateY(-2px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. SECCIONES
+   -------------------------------------------------------------------------- */
+
+/* --- Header --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-base), background var(--t-base);
+}
+
+.site-header.is-stuck { border-bottom-color: var(--line); background: rgba(0, 0, 0, 0.86); }
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+}
+
+.brand-mark {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+}
+
+.brand-mark svg { width: 15px; height: 15px; }
+.brand .light { color: var(--fg-muted); font-weight: 500; }
+
+.nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+/* --- Hero --- */
+.hero {
+  padding-block: clamp(4rem, 10vw, 7.5rem) clamp(3rem, 6vw, 5rem);
+  text-align: center;
+}
+
+.hero-title {
+  font-size: clamp(2.35rem, 6.2vw, 4.25rem);
+  letter-spacing: -0.045em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-sub {
+  font-size: clamp(1.02rem, 1.9vw, 1.2rem);
+  color: var(--fg-secondary);
+  max-width: 620px;
+  margin: 0 auto 2.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.microcopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  letter-spacing: -0.005em;
+}
+
+.microcopy svg { width: 13px; height: 13px; stroke: var(--positive); flex: none; }
+
+/* --- Barra de prueba social --- */
+.proof {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.proof-item { padding: 1.35rem 1rem; text-align: center; }
+.proof-item + .proof-item { border-left: 1px solid var(--line); }
+.proof-num { font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; }
+.proof-label { font-size: 0.7rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 0.35rem; font-weight: 500; }
+
+/* --- Comparativa --- */
+.compare-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+.compare-card.win { border-color: var(--accent-line); background: linear-gradient(180deg, rgba(56, 189, 248, 0.045), transparent 55%); }
+
+.card-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--r-full);
+  margin-bottom: 1rem;
+  border: 1px solid var(--line);
+  color: var(--fg-muted);
+}
+
+.card-tag.win { color: var(--accent); border-color: var(--accent-line); background: var(--accent-dim); }
+
+.card-title { font-size: 1.2rem; margin-bottom: 1.25rem; letter-spacing: -0.03em; }
+
+.check-list { list-style: none; display: grid; gap: 0.85rem; }
+
+.check-list li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  font-size: 0.9375rem;
+  color: var(--fg-secondary);
+  line-height: 1.55;
+}
+
+.check-list svg { width: 16px; height: 16px; margin-top: 3px; flex: none; }
+.ic-bad  { stroke: var(--negative); }
+.ic-good { stroke: var(--accent); }
+
+/* --- Calculadora --- */
+.calc { display: grid; grid-template-columns: 1fr 0.85fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; padding: clamp(1.5rem, 3.5vw, 2.5rem); }
+
+.control + .control { margin-top: 1.75rem; }
+
+.control-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.85rem; gap: 1rem; }
+.control-label { font-size: 0.875rem; color: var(--fg-secondary); }
+.control-value { font-size: 1.0625rem; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--r-full);
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+  /* El relleno hasta el thumb lo pinta el JS vía --fill */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: var(--fill, 0%) 100%;
+  background-repeat: no-repeat;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--fg);
+  border: 3px solid #000;
+  box-shadow: 0 0 0 1px var(--line-strong), 0 2px 8px rgba(0, 0, 0, 0.6);
+  cursor: grab;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.slider::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: 0 0 0 5px var(--accent-dim); }
+.slider:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.05); }
+
+.slider::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--fg);
+  border: 3px solid #000;
+  box-shadow: 0 0 0 1px var(--line-strong);
+  cursor: grab;
+}
+
+.ticks { display: flex; justify-content: space-between; margin-top: 0.6rem; font-size: 0.7rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+
+.calc-out {
+  text-align: center;
+  padding: clamp(1.5rem, 3vw, 2rem) 1.25rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+
+.calc-out-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); font-weight: 600; }
+
+.calc-amount {
+  font-size: clamp(2.4rem, 6vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  margin: 0.65rem 0 0.35rem;
+  color: var(--negative);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-annual { font-size: 0.85rem; color: var(--fg-muted); }
+.calc-annual strong { color: var(--fg-secondary); font-variant-numeric: tabular-nums; }
+
+.calc-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 1.5rem; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+.calc-metric { background: var(--bg); padding: 0.9rem 0.5rem; }
+.calc-metric-num { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.calc-metric-desc { font-size: 0.68rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.2rem; }
+
+.calc-cta { margin-top: 1.5rem; }
+.calc-footnote { margin-top: 1.5rem; font-size: 0.75rem; color: var(--fg-muted); }
+
+/* --- Grids de 3 --- */
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+.pillar-icon {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: var(--r-md);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+  margin-bottom: 1.15rem;
+}
+
+.pillar-icon svg { width: 19px; height: 19px; }
+
+.card h3 { font-size: 1.0625rem; margin-bottom: 0.6rem; letter-spacing: -0.025em; }
+.card p  { font-size: 0.9375rem; line-height: 1.62; }
+
+.step-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.9rem;
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Garantía --- */
+.guarantee {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+  border-color: var(--line-strong);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+}
+
+.guarantee-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: var(--r-md); background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.22); color: var(--positive); }
+.guarantee-icon svg { width: 21px; height: 21px; }
+.guarantee h3 { margin-bottom: 0.5rem; }
+
+/* --- CTA final --- */
+.final-cta {
+  text-align: center;
+  padding: clamp(2.75rem, 7vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(70% 120% at 50% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 62%),
+    var(--surface-1);
+}
+
+.final-cta .section-title { margin-bottom: 1rem; }
+.final-cta p { max-width: 520px; margin: 0 auto 2rem; }
+
+/* --- Footer --- */
+.site-footer { border-top: 1px solid var(--line); padding-block: 2.5rem; }
+.footer-inner { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+.site-footer p { font-size: 0.8125rem; color: var(--fg-muted); }
+.footer-link { font-size: 0.8125rem; color: var(--fg-muted); transition: color var(--t-fast); }
+.footer-link:hover { color: var(--fg); }
+
+/* --- Barra CTA fija en móvil (recuperación de conversión) --- */
+.mobile-cta {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 120;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  transform: translateY(115%);
+  transition: transform 0.4s var(--ease-out);
+  display: none;
+}
+
+.mobile-cta.is-visible { transform: translateY(0); }
+
+@media (max-width: 720px) { .mobile-cta { display: block; } }
+
+/* --------------------------------------------------------------------------
+   7. MOTION
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+  transition-delay: var(--delay, 0s);
+}
+
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   8. RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .compare-grid, .grid-3, .calc { grid-template-columns: 1fr; }
+  .calc { gap: 2rem; }
+}
+
+@media (max-width: 720px) {
+  html { scroll-padding-top: 76px; }
+  body { padding-bottom: 84px; }
+  .nav-actions .pill { display: none; }
+  .proof { grid-template-columns: 1fr 1fr; }
+  .proof-item:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  .proof-item:nth-child(2n + 1) { border-left: none; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
+  .guarantee { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 400px) {
+  .nav-actions .btn span { display: none; }
+  .nav-actions .btn { padding: 0.55rem 0.7rem; }
+}
+</style>
 </head>
+
 <body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<div class="atmosphere" aria-hidden="true"></div>
 
-  <!-- Ambient Light Glows -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-  <div class="ambient-glow glow-3"></div>
-  <div class="noise-overlay"></div>
+<!-- ==========================================================================
+     HEADER
+     ========================================================================== -->
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a href="#" class="brand" aria-label="PatoCreando, inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </span>
+      Pato<span class="light">Creando</span>
+    </a>
 
-  <!-- ==========================================================================
-       HEADER & NAVIGATION
-       ========================================================================== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="#" class="brand-logo">
-        <div class="logo-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <span>Pato</span>Creando
+    <div class="nav-actions">
+      <span class="pill"><span class="dot" aria-hidden="true"></span> Quedan <strong>2 cupos</strong> este mes</span>
+      <a class="btn btn-primary btn-sm"
+         href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20reclamar%20mi%20auditor%C3%ADa%20y%20boceto%20sin%20cargo."
+         target="_blank" rel="noopener"
+         data-wa="Header"
+         data-wa-intent="Quiero reclamar mi auditoría + boceto sin cargo.">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.87 11.87 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+        <span>WhatsApp</span>
       </a>
+    </div>
+  </div>
+</header>
 
-      <div class="header-actions">
-        <div class="badge-pill status">
-          <span class="pulse-dot"></span>
-          Solo 2 cupos este mes
-        </div>
+<main id="main">
 
-        <a href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20dise%C3%B1ar%20mi%20pr%C3%B3ximo%20sistema%20web%20de%20alta%20conversi%C3%B3n" target="_blank" rel="noopener noreferrer" class="btn btn-luxury-primary btn-sm">
-          <span>WhatsApp Directo</span>
+  <!-- ========================================================================
+       HERO
+       ======================================================================== -->
+  <section class="section hero" aria-labelledby="hero-title">
+    <div class="container">
+      <span class="eyebrow">Estrategia humana + Orquestación de IA</span>
+
+      <h1 class="hero-title text-gradient" id="hero-title">
+        No escribo código.<br>
+        <span class="text-gradient-accent">Orquesto Inteligencia Artificial.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Sistemas web de ultra alta conversión para creadores e infoproductores.
+        La estrategia la pone la mente humana. La ejecución, la IA.
+        Online en 48&nbsp;horas y cargando en menos de 0.6&nbsp;segundos.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary"
+           href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20auditar%20la%20fuga%20de%20tr%C3%A1fico%20de%20mi%20p%C3%A1gina%20actual."
+           target="_blank" rel="noopener"
+           data-wa="Hero"
+           data-wa-intent="Quiero auditar la fuga de tráfico de mi página actual.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.87 11.87 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          <span>Reclamar auditoría + boceto gratis</span>
+        </a>
+
+        <a class="btn btn-ghost" href="#calculadora">
+          Calcular cuánto pierdo <span class="arrow" aria-hidden="true">↓</span>
         </a>
       </div>
+
+      <p class="microcopy">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Sin reuniones eternas · Diagnóstico en 15 min · Entrega en 48-72 h
+      </p>
+
+      <div class="proof reveal" role="list">
+        <div class="proof-item" role="listitem">
+          <div class="proof-num text-gradient-accent">&lt;0.6s</div>
+          <div class="proof-label">Carga in-app</div>
+        </div>
+        <div class="proof-item" role="listitem">
+          <div class="proof-num">48 h</div>
+          <div class="proof-label">Entrega promedio</div>
+        </div>
+        <div class="proof-item" role="listitem">
+          <div class="proof-num text-gradient-accent">+42%</div>
+          <div class="proof-label">Conversión media</div>
+        </div>
+        <div class="proof-item" role="listitem">
+          <div class="proof-num">100%</div>
+          <div class="proof-label">Garantía de velocidad</div>
+        </div>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <!-- ==========================================================================
-         HERO SECTION (DISRUPTIVE AUTHORITY HOOK)
-         ========================================================================== -->
-    <section class="hero-section">
-      <div class="container hero-content">
-        <div class="hero-eyebrow">
-          <div class="badge-pill">
-            <span>⚡ Estrategia Humana + Orquestación de Inteligencia Artificial</span>
-          </div>
-        </div>
-
-        <h1 class="hero-title text-gradient-white">
-          No escribo código línea por línea.<br>
-          <span class="text-gradient-purple">Orquesto Inteligencia Artificial</span> para construir sistemas web de ultra alta conversión.
-        </h1>
-
-        <p class="hero-subtitle">
-          La mente humana aporta la psicología de venta y la arquitectura de negocio. La IA ejecuta con precisión quirúrgica en tiempo récord. Tu ecosistema listo en 48 horas y volando a &lt;0.6s.
-        </p>
-
-        <div class="hero-cta-group">
-          <div class="cta-actions">
-            <a href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20auditar%20mi%20p%C3%A1gina%20actual" target="_blank" rel="noopener noreferrer" class="btn btn-luxury-primary">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-              </svg>
-              <span>Auditar Mi Fuga de Tráfico Gratis</span>
-            </a>
-
-            <a href="#calculadora" class="btn btn-secondary-ghost">
-              <span>Calcular Pérdidas ↓</span>
-            </a>
-          </div>
-
-          <div class="cta-microcopy">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            Sin reuniones eternas • Diagnóstico en 15 min • Entrega en 48-72h
-          </div>
-        </div>
-
-        <!-- Proof Metrics Bar -->
-        <div class="proof-bar reveal-on-scroll">
-          <div class="proof-item">
-            <div class="proof-number text-gradient-emerald">&lt;0.6s</div>
-            <div class="proof-label">Carga en Navegadores In-App</div>
-          </div>
-          <div class="proof-item">
-            <div class="proof-number text-gradient-purple">48 Hrs</div>
-            <div class="proof-label">Tiempo Promedio de Entrega</div>
-          </div>
-          <div class="proof-item">
-            <div class="proof-number text-gradient-emerald">+42%</div>
-            <div class="proof-label">Aumento Promedio de Conversión</div>
-          </div>
-          <div class="proof-item">
-            <div class="proof-number text-gradient-purple">100%</div>
-            <div class="proof-label">Garantía de Velocidad</div>
-          </div>
-        </div>
+  <!-- ========================================================================
+       COMPARATIVA
+       ======================================================================== -->
+  <section class="section deferred" aria-labelledby="compare-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">El cambio de paradigma</span>
+        <h2 class="section-title" id="compare-title">La vieja escuela vs.<br>el sistema híbrido</h2>
+        <p>El mercado cambió. Esperar semanas por un sitio que después carga lento dentro de Instagram te cuesta ventas todos los días.</p>
       </div>
-    </section>
 
-    <!-- ==========================================================================
-         COMPARISON SECTION (THE PARADIGM SHIFT)
-         ========================================================================== -->
-    <section class="section-padding">
-      <div class="container">
-        <div class="section-header reveal-on-scroll">
-          <div class="section-tag">El Cambio de Paradigma</div>
-          <h2 class="section-title">La vieja escuela vs. <br><span class="text-gradient-purple">Sistemas Híbridos PatoCreando</span></h2>
-          <p>El mercado cambió. Esperar semanas por un sitio web que luego carga lento en el navegador de Instagram te está costando ventas diarias.</p>
-        </div>
+      <div class="compare-grid">
+        <article class="card compare-card reveal">
+          <span class="card-tag">Agencias tradicionales</span>
+          <h3 class="card-title">Lento, caro y genérico</h3>
+          <ul class="check-list">
+            <li>
+              <svg class="ic-bad" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span><strong>Semanas de desarrollo</strong> perdiendo el momentum de tu lanzamiento.</span>
+            </li>
+            <li>
+              <svg class="ic-bad" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span>Plantillas pesadas de WordPress/Elementor que <strong>cargan en +3 segundos</strong>.</span>
+            </li>
+            <li>
+              <svg class="ic-bad" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span>Buena parte del tráfico de TikTok/IG <strong>abandona antes de ver la oferta</strong>.</span>
+            </li>
+            <li>
+              <svg class="ic-bad" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span>Te cobran por horas de diseño, no por resultados de venta.</span>
+            </li>
+          </ul>
+        </article>
 
-        <div class="comparison-grid reveal-on-scroll">
-          <div class="compare-card pain">
-            <span class="card-badge bad">Agencias Tradicionales</span>
-            <h3 class="card-heading">Lento, Costoso y Genérico</h3>
-            <ul class="compare-list">
-              <li><span class="list-icon">❌</span> <span><strong>Semanas de desarrollo</strong> perdiendo momentum en tus lanzamientos.</span></li>
-              <li><span class="list-icon">❌</span> <span>Plantillas pesadas (WordPress/Elementor) que <strong>cargan en +3 segundos</strong>.</span></li>
-              <li><span class="list-icon">❌</span> <span>El 50% del tráfico de TikTok/IG <strong>abandona la página</strong> antes de verla.</span></li>
-              <li><span class="list-icon">❌</span> <span>Cobran por horas de diseño, no por resultados de ventas.</span></li>
-            </ul>
-          </div>
-
-          <div class="compare-card solution">
-            <span class="card-badge good">Método Híbrido IA</span>
-            <h3 class="card-heading">Velocidad y Conversión Extrema</h3>
-            <ul class="compare-list">
-              <li><span class="list-icon">✅</span> <span><strong>Entrega en 48 horas</strong> usando IA generativa de código limpio (HTML/CSS/JS).</span></li>
-              <li><span class="list-icon">✅</span> <span>Carga instántanea <strong>(&lt;0.6 segundos)</strong> a prueba de navegadores in-app.</span></li>
-              <li><span class="list-icon">✅</span> <span>Estrategia humana para <strong>copys persuasivos</strong> y gatillos mentales.</span></li>
-              <li><span class="list-icon">✅</span> <span>Garantía de rendimiento: Si no es ultra-rápida, no pagas el saldo.</span></li>
-            </ul>
-          </div>
-        </div>
+        <article class="card compare-card win reveal" style="--delay: 0.08s">
+          <span class="card-tag win">Método híbrido IA</span>
+          <h3 class="card-title">Velocidad y conversión extremas</h3>
+          <ul class="check-list">
+            <li>
+              <svg class="ic-good" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>Entrega en 48 horas</strong> con código nativo limpio: HTML, CSS y JS.</span>
+            </li>
+            <li>
+              <svg class="ic-good" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Carga instantánea <strong>(&lt;0.6 s)</strong>, a prueba de navegadores in-app.</span>
+            </li>
+            <li>
+              <svg class="ic-good" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Arquitectura de persuasión humana: <strong>copy y gatillos mentales</strong> reales.</span>
+            </li>
+            <li>
+              <svg class="ic-good" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Garantía de rendimiento: si no vuela, <strong>no pagás el saldo</strong>.</span>
+            </li>
+          </ul>
+        </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ==========================================================================
-         CALCULATOR SECTION
-         ========================================================================== -->
-    <section id="calculadora" class="section-padding">
-      <div class="container">
-        <div class="section-header reveal-on-scroll">
-          <div class="section-tag">Detén la hemorragia</div>
-          <h2 class="section-title">Calculadora de Fuga de Tráfico</h2>
-          <p>Las redes sociales usan navegadores in-app lentos. Si tu web actual tarda más de 2 segundos, pierdes al 40% de tus clics. Descubre cuánto dinero estás dejando en la mesa.</p>
-        </div>
+  <!-- ========================================================================
+       CALCULADORA DE FUGA
+       ======================================================================== -->
+  <section class="section deferred" id="calculadora" aria-labelledby="calc-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">Detené la hemorragia</span>
+        <h2 class="section-title" id="calc-title">Calculadora de fuga de tráfico</h2>
+        <p>Las redes usan navegadores in-app lentos. Si tu web tarda más de 2 segundos, perdés cerca del 40% de tus clics. Mirá cuánto dinero estás dejando sobre la mesa.</p>
+      </div>
 
-        <div class="calculator-card reveal-on-scroll">
-          <div class="calculator-grid">
-            <div class="calculator-controls">
-              <div class="control-group">
-                <div class="control-header">
-                  <span class="control-label">Tráfico mensual (clics al link)</span>
-                  <span class="control-value" id="val-traffic">10,000</span>
-                </div>
-                <input type="range" id="slider-traffic" class="custom-slider" min="1000" max="100000" step="1000" value="10000">
-                <div class="slider-ticks">
-                  <span>1K</span>
-                  <span>100K</span>
-                </div>
-              </div>
-              <div class="control-group" style="margin-top: 1rem;">
-                <div class="control-header">
-                  <span class="control-label">Precio de tu infoproducto (USD)</span>
-                  <span class="control-value" id="val-ticket">$97</span>
-                </div>
-                <input type="range" id="slider-ticket" class="custom-slider" min="10" max="500" step="10" value="97">
-                <div class="slider-ticks">
-                  <span>$10</span>
-                  <span>$500</span>
-                </div>
-              </div>
+      <div class="card calc reveal">
+        <div class="calc-controls">
+          <div class="control">
+            <div class="control-head">
+              <label class="control-label" for="slider-traffic">Tráfico mensual (clics al link)</label>
+              <span class="control-value" id="val-traffic">10,000</span>
             </div>
-            
-            <div class="calculator-results">
-              <span class="result-badge">Dinero perdido al mes por web lenta</span>
-              <div class="lost-amount" id="calc-result">$7,760</div>
-              <div class="lost-annual">Fuga anual proyectada: <strong id="calc-annual">$93,120</strong></div>
-              
-              <div class="lost-metrics-grid">
-                <div>
-                  <div class="metric-num" id="calc-bounces">4,000</div>
-                  <div class="metric-desc">Visitas rebotadas</div>
-                </div>
-                <div>
-                  <div class="metric-num" id="calc-sales">80</div>
-                  <div class="metric-desc">Ventas perdidas</div>
-                </div>
-              </div>
+            <input class="slider" type="range" id="slider-traffic" min="1000" max="100000" step="1000" value="10000"
+                   aria-describedby="val-traffic">
+            <div class="ticks"><span>1K</span><span>100K</span></div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label class="control-label" for="slider-ticket">Precio de tu producto (USD)</label>
+              <span class="control-value" id="val-ticket">$100</span>
+            </div>
+            <input class="slider" type="range" id="slider-ticket" min="10" max="500" step="10" value="100"
+                   aria-describedby="val-ticket">
+            <div class="ticks"><span>$10</span><span>$500</span></div>
+          </div>
+
+          <p class="calc-footnote">
+            Modelo: 40% de rebote por latencia sobre el tráfico social y 2% de conversión sobre ese tráfico perdido.
+          </p>
+        </div>
+
+        <div class="calc-out">
+          <span class="calc-out-label">Fuga mensual por web lenta</span>
+          <div class="calc-amount" id="calc-result" role="status" aria-live="polite">$8,000</div>
+          <div class="calc-annual">Proyección anual: <strong id="calc-annual">$96,000</strong></div>
+
+          <div class="calc-metrics">
+            <div class="calc-metric">
+              <div class="calc-metric-num" id="calc-bounces">4,000</div>
+              <div class="calc-metric-desc">Visitas rebotadas</div>
+            </div>
+            <div class="calc-metric">
+              <div class="calc-metric-num" id="calc-sales">80</div>
+              <div class="calc-metric-desc">Ventas perdidas</div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ==========================================================================
-         SECRET ENGINE (PILLARS)
-         ========================================================================== -->
-    <section class="section-padding">
-      <div class="container">
-        <div class="section-header reveal-on-scroll">
-          <h2 class="section-title">El motor secreto detrás del sistema</h2>
-        </div>
-
-        <div class="pillars-grid reveal-on-scroll">
-          <div class="pillar-card">
-            <div class="pillar-icon-wrap">🧠</div>
-            <h3 class="pillar-title">1. Estrategia Humana</h3>
-            <p>La IA no entiende a tu cliente ideal, yo sí. Diseño la arquitectura de persuasión, el flujo de ventas y desmonto las objeciones antes de escribir una sola línea.</p>
-          </div>
-          <div class="pillar-card">
-            <div class="pillar-icon-wrap">⚡</div>
-            <h3 class="pillar-title">2. Velocidad IA</h3>
-            <p>Utilizo LLMs avanzados para generar código nativo súper ligero. Cero plugins innecesarios, cero bases de datos pesadas. Solo código puro que vuela en móviles.</p>
-          </div>
-          <div class="pillar-card">
-            <div class="pillar-icon-wrap">📈</div>
-            <h3 class="pillar-title">3. Optimización In-App</h3>
-            <p>Sistemas programados específicamente para sobrevivir y cargar instantáneamente dentro del navegador integrado de Instagram y TikTok.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         STEPS & GUARANTEE
-         ========================================================================== -->
-    <section class="section-padding">
-      <div class="container">
-        <div class="section-header reveal-on-scroll">
-          <div class="section-tag">Proceso Cero Fricción</div>
-          <h2 class="section-title">Tu ecosistema listo en 3 pasos</h2>
-        </div>
-
-        <div class="steps-grid reveal-on-scroll">
-          <div class="step-card">
-            <div class="step-number">01</div>
-            <h3 class="pillar-title">Auditoría Flash (WhatsApp)</h3>
-            <p>Mándame tu link actual o tu idea por WhatsApp. En 15 minutos te digo exactamente qué está fallando y cómo la IA puede duplicar su conversión.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">02</div>
-            <h3 class="pillar-title">Orquestación Híbrida</h3>
-            <p>Apruebas el copy y la oferta. Yo me encargo de que la IA desarrolle todo el front-end a una velocidad imposible para una agencia humana.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">03</div>
-            <h3 class="pillar-title">Despliegue & Escalado</h3>
-            <p>En 48/72hs recibes tu sistema subido a servidores ultra rápidos. Listo para que le inyectes tráfico y veas subir las ventas.</p>
-          </div>
-        </div>
-
-        <div class="guarantee-box reveal-on-scroll">
-          <h3 class="card-heading text-gradient-emerald">Garantía Incondicional de Velocidad</h3>
-          <p>Si tu nueva Landing Page creada con nuestro sistema híbrido tarda más de 1 segundo en cargar en pruebas de Google PageSpeed Mobile, <strong>no pagas el 50% restante del proyecto</strong>. Te lo entrego optimizado o te sale a mitad de precio.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         FINAL CTA
-         ========================================================================== -->
-    <section class="section-padding">
-      <div class="container">
-        <div class="final-cta-card reveal-on-scroll">
-          <h2 class="section-title text-gradient-white">Deja de perder el 40% de tu tráfico hoy</h2>
-          <p class="hero-subtitle" style="margin-bottom: 2rem;">Escríbeme ahora. Trabajo con un máximo de 2 proyectos simultáneos para garantizar la calidad del prompt de IA y la estrategia humana.</p>
-          <a href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20dise%C3%B1ar%20mi%20pr%C3%B3ximo%20sistema%20web%20de%20alta%20conversi%C3%B3n" target="_blank" rel="noopener noreferrer" class="btn btn-luxury-primary">
-            <span>Iniciar mi Auditoría por WhatsApp</span>
+          <a class="btn btn-primary btn-block calc-cta"
+             href="https://wa.me/?text=Hola%20Pato%2C%20us%C3%A9%20tu%20calculadora%20y%20quiero%20frenar%20esa%20fuga."
+             target="_blank" rel="noopener"
+             data-wa="Calculadora"
+             data-wa-intent="Usé tu calculadora y quiero frenar esa fuga.">
+            <span>Quiero frenar esta fuga</span>
           </a>
         </div>
       </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 PatoCreando. Estrategia Humana + Orquestación IA.</p>
     </div>
-  </footer>
+  </section>
 
-  <!-- ==========================================================================
-       MOTOR JAVASCRIPT (INTERACTIVIDAD Y ANIMACIONES)
-       ========================================================================== -->
-  <script>
-    // 1. Calculadora de Fuga de Tráfico
-    const trafficSlider = document.getElementById('slider-traffic');
-    const ticketSlider = document.getElementById('slider-ticket');
-    const valTraffic = document.getElementById('val-traffic');
-    const valTicket = document.getElementById('val-ticket');
-    
-    const calcResult = document.getElementById('calc-result');
-    const calcAnnual = document.getElementById('calc-annual');
-    const calcBounces = document.getElementById('calc-bounces');
-    const calcSales = document.getElementById('calc-sales');
+  <!-- ========================================================================
+       PILARES
+       ======================================================================== -->
+  <section class="section deferred" aria-labelledby="engine-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">El motor</span>
+        <h2 class="section-title" id="engine-title">Tres capas detrás del sistema</h2>
+      </div>
 
-    function calculateLoss() {
-      const traffic = parseInt(trafficSlider.value);
-      const ticket = parseInt(ticketSlider.value);
-      
-      // Hipótesis: Se pierde el 40% del tráfico por web lenta
-      const lostTraffic = traffic * 0.40; 
-      // Hipótesis: De los que se fueron, el 2% iba a comprar
-      const lostSales = Math.floor(lostTraffic * 0.02);
-      const lostRevenue = lostSales * ticket;
+      <div class="grid-3">
+        <article class="card interactive reveal">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 00-4 4 3 3 0 00-2 5.5A3.5 3.5 0 008 18a3 3 0 004 2 3 3 0 004-2 3.5 3.5 0 002-6.5A3 3 0 0016 6a4 4 0 00-4-4z"/></svg>
+          </div>
+          <h3>Estrategia humana</h3>
+          <p>La IA no conoce a tu cliente ideal, yo sí. Diseño la arquitectura de persuasión, el flujo de venta y desmonto las objeciones antes de la primera línea de código.</p>
+        </article>
 
-      valTraffic.textContent = traffic.toLocaleString();
-      valTicket.textContent = '$' + ticket;
-      
-      calcResult.textContent = '$' + lostRevenue.toLocaleString();
-      calcAnnual.textContent = '$' + (lostRevenue * 12).toLocaleString();
-      
-      calcBounces.textContent = lostTraffic.toLocaleString();
-      calcSales.textContent = lostSales.toLocaleString();
-    }
+        <article class="card interactive reveal" style="--delay: 0.08s">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3>Velocidad IA</h3>
+          <p>Orquesto modelos avanzados para generar código nativo ultraligero. Cero plugins, cero base de datos pesada. Solo lo que el navegador necesita para pintar.</p>
+        </article>
 
-    trafficSlider.addEventListener('input', calculateLoss);
-    ticketSlider.addEventListener('input', calculateLoss);
-    
-    // Inicializar valores
-    calculateLoss();
+        <article class="card interactive reveal" style="--delay: 0.16s">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="19 9 13 15 9 11 5 15"/></svg>
+          </div>
+          <h3>Optimización in-app</h3>
+          <p>Construido específicamente para sobrevivir y cargar instantáneamente dentro del navegador integrado de Instagram y TikTok, que es donde vive tu tráfico.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-    // 2. Animaciones de Aparición al Scroll (Intersection Observer)
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.15
-    };
+  <!-- ========================================================================
+       PROCESO + GARANTÍA
+       ======================================================================== -->
+  <section class="section deferred" aria-labelledby="process-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">Proceso cero fricción</span>
+        <h2 class="section-title" id="process-title">Tu ecosistema listo en 3 pasos</h2>
+      </div>
 
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          observer.unobserve(entry.target); 
-        }
-      });
-    }, observerOptions);
+      <div class="grid-3">
+        <article class="card reveal">
+          <span class="step-num">PASO 01</span>
+          <h3>Auditoría flash por WhatsApp</h3>
+          <p>Mandame tu link actual o tu idea. En 15 minutos te digo qué está fallando y dónde está la conversión que estás perdiendo.</p>
+        </article>
 
-    document.querySelectorAll('.reveal-on-scroll').forEach(element => {
-      scrollObserver.observe(element);
+        <article class="card reveal" style="--delay: 0.08s">
+          <span class="step-num">PASO 02</span>
+          <h3>Orquestación híbrida</h3>
+          <p>Aprobás el copy y la oferta. Yo dirijo a la IA para desarrollar el front-end completo a una velocidad imposible para una agencia.</p>
+        </article>
+
+        <article class="card reveal" style="--delay: 0.16s">
+          <span class="step-num">PASO 03</span>
+          <h3>Despliegue y escalado</h3>
+          <p>En 48-72 h recibís el sistema desplegado en infraestructura de borde. Listo para inyectarle tráfico y ver subir las ventas.</p>
+        </article>
+      </div>
+
+      <div class="card guarantee reveal">
+        <span class="guarantee-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </span>
+        <div>
+          <h3>Garantía incondicional de velocidad</h3>
+          <p>Si tu nueva landing tarda más de 1 segundo en Google PageSpeed Mobile, <strong>no pagás el 50% restante del proyecto</strong>. Te la entrego optimizada o te sale a mitad de precio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       CTA FINAL
+       ======================================================================== -->
+  <section class="section deferred" aria-labelledby="final-title">
+    <div class="container">
+      <div class="final-cta reveal" id="finalCta">
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span> Quedan 2 cupos este mes</span>
+        <h2 class="section-title text-gradient" id="final-title">Dejá de perder el 40% de tu tráfico</h2>
+        <p>Escribime ahora. Trabajo con un máximo de 2 proyectos simultáneos para sostener la calidad de la estrategia y de la orquestación.</p>
+
+        <a class="btn btn-primary"
+           href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20iniciar%20mi%20auditor%C3%ADa%20y%20reservar%20uno%20de%20los%202%20cupos."
+           target="_blank" rel="noopener"
+           data-wa="CTA final"
+           data-wa-intent="Quiero iniciar mi auditoría y reservar uno de los 2 cupos.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.87 11.87 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          <span>Iniciar mi auditoría por WhatsApp</span>
+        </a>
+
+        <p class="microcopy" style="margin-top: 1.25rem;">Respuesta promedio en menos de 2 horas.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>&copy; <span id="year">2026</span> PatoCreando · Estrategia humana + Orquestación IA</p>
+    <a class="footer-link"
+       href="https://wa.me/?text=Hola%20Pato%2C%20tengo%20una%20consulta."
+       target="_blank" rel="noopener"
+       data-wa="Footer"
+       data-wa-intent="Tengo una consulta.">Contacto por WhatsApp →</a>
+  </div>
+</footer>
+
+<!-- Barra de conversión fija (solo móvil) -->
+<div class="mobile-cta" id="mobileCta">
+  <a class="btn btn-primary btn-block"
+     href="https://wa.me/?text=Hola%20Pato%2C%20quiero%20reclamar%20mi%20auditor%C3%ADa%20y%20boceto%20sin%20cargo."
+     target="_blank" rel="noopener"
+     data-wa="Barra móvil"
+     data-wa-intent="Quiero reclamar mi auditoría + boceto sin cargo.">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.87 11.87 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+    <span>Reclamar mi cupo sin cargo</span>
+  </a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     CONFIG - ÚNICO PUNTO DE EDICIÓN DEL FLUJO DE WHATSAPP
+     ----------------------------------------------------------------------
+     Poné el número en formato internacional: sin "+", sin espacios,
+     sin guiones. Ejemplo Argentina: '5491122334455'.
+     Si queda vacío, los links abren WhatsApp sin destinatario fijo
+     (el usuario elige el contacto), que es el comportamiento actual.
+     ====================================================================== */
+  var WA_PHONE  = '';
+  var WA_PREFIX = 'Hola Pato!';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ----------------------------------------------------------------------
+     1. Flujo WhatsApp centralizado
+     Los href del HTML ya son válidos (progressive enhancement); el JS los
+     enriquece con el origen del clic y el resultado de la calculadora,
+     para que el lead llegue precalificado.
+     ---------------------------------------------------------------------- */
+  var waContext = null;
+  var waLinks = Array.prototype.slice.call(document.querySelectorAll('[data-wa-intent]'));
+
+  function buildWaHref(intent, source) {
+    var msg = WA_PREFIX + ' ' + intent;
+    if (waContext) msg += ' ' + waContext;
+    if (source) msg += ' [' + source + ']';
+    return 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(msg);
+  }
+
+  function syncWaLinks() {
+    waLinks.forEach(function (link) {
+      link.href = buildWaHref(link.getAttribute('data-wa-intent'), link.getAttribute('data-wa'));
     });
-  </script>
+  }
+
+  syncWaLinks();
+
+  /* ----------------------------------------------------------------------
+     2. Calculadora de fuga de tráfico
+     ---------------------------------------------------------------------- */
+  var BOUNCE_RATE  = 0.40; // tráfico social perdido por latencia
+  var CONVERT_RATE = 0.02; // conversión sobre el tráfico perdido
+
+  var trafficEl = document.getElementById('slider-traffic');
+  var ticketEl  = document.getElementById('slider-ticket');
+
+  var out = {
+    traffic: document.getElementById('val-traffic'),
+    ticket:  document.getElementById('val-ticket'),
+    result:  document.getElementById('calc-result'),
+    annual:  document.getElementById('calc-annual'),
+    bounces: document.getElementById('calc-bounces'),
+    sales:   document.getElementById('calc-sales')
+  };
+
+  function fmt(n) { return n.toLocaleString('en-US'); }
+
+  function paintSlider(el) {
+    var min = Number(el.min), max = Number(el.max);
+    el.style.setProperty('--fill', ((el.value - min) / (max - min) * 100) + '%');
+  }
+
+  /* Tween del número principal: sensación de contador vivo, sin jank. */
+  var tweenFrom = 0, tweenRaf = null;
+
+  function tweenAmount(to) {
+    if (reduceMotion) { out.result.textContent = '$' + fmt(to); tweenFrom = to; return; }
+    var from = tweenFrom, start = null, dur = 320;
+    if (tweenRaf) cancelAnimationFrame(tweenRaf);
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      out.result.textContent = '$' + fmt(Math.round(from + (to - from) * eased));
+      if (p < 1) { tweenRaf = requestAnimationFrame(step); }
+      else { tweenFrom = to; tweenRaf = null; }
+    }
+    tweenRaf = requestAnimationFrame(step);
+  }
+
+  function calculate(animate) {
+    var traffic = parseInt(trafficEl.value, 10);
+    var ticket  = parseInt(ticketEl.value, 10);
+
+    var lostTraffic = Math.round(traffic * BOUNCE_RATE);
+    var lostSales   = Math.floor(lostTraffic * CONVERT_RATE);
+    var lostRevenue = lostSales * ticket;
+
+    out.traffic.textContent = fmt(traffic);
+    out.ticket.textContent  = '$' + fmt(ticket);
+    out.annual.textContent  = '$' + fmt(lostRevenue * 12);
+    out.bounces.textContent = fmt(lostTraffic);
+    out.sales.textContent   = fmt(lostSales);
+
+    if (animate) { tweenAmount(lostRevenue); }
+    else { out.result.textContent = '$' + fmt(lostRevenue); tweenFrom = lostRevenue; }
+
+    paintSlider(trafficEl);
+    paintSlider(ticketEl);
+
+    // El dato viaja dentro del mensaje de WhatsApp.
+    waContext = 'Según tu calculadora estoy perdiendo unos $' + fmt(lostRevenue) +
+                ' por mes (' + fmt(lostSales) + ' ventas) con ' + fmt(traffic) + ' clics mensuales.';
+    syncWaLinks();
+  }
+
+  if (trafficEl && ticketEl) {
+    trafficEl.addEventListener('input', function () { calculate(true); });
+    ticketEl.addEventListener('input', function () { calculate(true); });
+    calculate(false);
+  }
+
+  /* ----------------------------------------------------------------------
+     3. Reveal on scroll
+     ---------------------------------------------------------------------- */
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+
+    revealEls.forEach(function (el) { revealObserver.observe(el); });
+  }
+
+  /* ----------------------------------------------------------------------
+     4. Header hairline + barra CTA móvil
+     Un solo listener pasivo con throttle por rAF: 60fps garantizados.
+     ---------------------------------------------------------------------- */
+  var header    = document.getElementById('siteHeader');
+  var mobileCta = document.getElementById('mobileCta');
+  var finalCta  = document.getElementById('finalCta');
+  var ticking   = false;
+
+  function onScroll() {
+    var y = window.pageYOffset;
+    header.classList.toggle('is-stuck', y > 8);
+
+    if (mobileCta) {
+      // Aparece pasado el hero y se retira al llegar al CTA final.
+      var pastHero = y > window.innerHeight * 0.65;
+      var atFinal  = finalCta ? finalCta.getBoundingClientRect().top < window.innerHeight * 0.9 : false;
+      mobileCta.classList.toggle('is-visible', pastHero && !atFinal);
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(onScroll);
+  }, { passive: true });
+
+  // En pestañas ocultas el navegador suspende rAF: el flag quedaría trabado
+  // y el header / la barra CTA no volverían a actualizarse nunca. Al volver
+  // a ser visible, reseteamos y repintamos.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    ticking = false;
+    onScroll();
+  });
+
+  onScroll();
+
+  /* ----------------------------------------------------------------------
+     5. Detalles
+     ---------------------------------------------------------------------- */
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
+</script>
 </body>
 </html>

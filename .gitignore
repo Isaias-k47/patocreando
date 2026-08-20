@@ -1,0 +1,17 @@
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+
+# Dependencias / builds
+node_modules/
+dist/
+.cache/
+
+# Entorno
+.env
+.env.local
