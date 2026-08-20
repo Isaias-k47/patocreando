@@ -67,6 +67,20 @@
   --line:          rgba(255, 255, 255, 0.08);
   --line-strong:   rgba(255, 255, 255, 0.16);
 
+  /* Glassmorphism - cristal esmerilado */
+  --glass-bg:        rgba(255, 255, 255, 0.032);
+  --glass-bg-hover:  rgba(255, 255, 255, 0.055);
+  --glass-blur:      blur(16px) saturate(150%);
+  --glass-sheen:     linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 42%);
+  --glass-edge:      inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+
+  /* Glow - neón desaturado, nunca saturado */
+  --glow-accent:      rgba(56, 189, 248, 0.42);
+  --glow-accent-soft: rgba(56, 189, 248, 0.20);
+  --glow-white:       rgba(255, 255, 255, 0.10);
+  --depth-ambient:    0 24px 48px -32px rgba(0, 0, 0, 0.95);
+  --depth-lifted:     0 32px 64px -28px rgba(0, 0, 0, 1);
+
   /* Tipografía */
   --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
@@ -141,10 +155,49 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(60% 45% at 50% -8%,  rgba(255, 255, 255, 0.07) 0%, transparent 65%),
-    radial-gradient(45% 35% at 88% 38%, rgba(56, 189, 248, 0.055) 0%, transparent 70%),
-    radial-gradient(50% 40% at 5% 92%,  rgba(56, 189, 248, 0.035) 0%, transparent 70%);
+  overflow: hidden;
+  /* Halo cenital estático: ancla la composición, no se mueve. */
+  background: radial-gradient(60% 45% at 50% -8%, rgba(255, 255, 255, 0.07) 0%, transparent 65%);
+}
+
+/*
+  Dos capas de deriva. Se animan SOLO con transform y opacity, que el
+  compositor resuelve en GPU sin repintar. Animar background-position o
+  los stops del gradiente forzaría un repaint de pantalla completa por
+  frame: eso es lo que mata el scroll en el navegador de Instagram.
+*/
+.atmosphere::before,
+.atmosphere::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.atmosphere::before {
+  width: 62vw; height: 62vw;
+  max-width: 880px; max-height: 880px;
+  top: 12%; right: -12%;
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.11) 0%, rgba(56, 189, 248, 0.03) 45%, transparent 70%);
+  animation: drift-a 38s var(--ease-io) infinite alternate;
+}
+
+.atmosphere::after {
+  width: 68vw; height: 68vw;
+  max-width: 940px; max-height: 940px;
+  bottom: -14%; left: -16%;
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.085) 0%, rgba(125, 211, 252, 0.025) 48%, transparent 72%);
+  animation: drift-b 52s var(--ease-io) infinite alternate;
+}
+
+@keyframes drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1);              opacity: 0.75; }
+  to   { transform: translate3d(-7vw, 7vh, 0) scale(1.22);      opacity: 1; }
+}
+
+@keyframes drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.12);           opacity: 1; }
+  to   { transform: translate3d(8vw, -5vh, 0) scale(1);         opacity: 0.7; }
 }
 
 /* --------------------------------------------------------------------------
@@ -251,7 +304,11 @@ strong { color: var(--fg); font-weight: 600; }
 .btn-primary {
   background: var(--fg);
   color: #000;
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.18) inset;
+  /* Glow ice blue detrás del botón + sombra de contacto = elevación real */
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+    0 8px 26px -12px var(--glow-accent),
+    0 4px 12px -6px rgba(0, 0, 0, 0.9);
 }
 
 .btn-primary::after {
@@ -266,13 +323,27 @@ strong { color: var(--fg); font-weight: 600; }
 }
 
 @media (hover: hover) {
+  /* Elevación 3D: sube, crece apenas, y el glow se abre hacia abajo. */
   .btn-primary:hover {
     background: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px -12px rgba(255, 255, 255, 0.45);
+    transform: translateY(-3px) scale(1.015);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+      0 18px 40px -14px var(--glow-accent),
+      0 8px 20px -8px rgba(0, 0, 0, 0.95),
+      0 0 0 1px rgba(56, 189, 248, 0.18);
   }
   .btn-primary:hover::after { animation: sheen 0.75s var(--ease-io); }
-  .btn-ghost:hover { background: var(--surface-hover); border-color: var(--line-strong); }
+
+  .btn-ghost:hover {
+    background: var(--glass-bg-hover);
+    border-color: rgba(56, 189, 248, 0.32);
+    transform: translateY(-3px);
+    box-shadow:
+      var(--glass-edge),
+      0 14px 32px -16px rgba(0, 0, 0, 0.95),
+      0 0 24px -10px var(--glow-accent-soft);
+  }
   .btn-ghost:hover .arrow { transform: translateX(3px); }
 }
 
@@ -282,9 +353,12 @@ strong { color: var(--fg); font-weight: 600; }
 }
 
 .btn-ghost {
-  background: var(--surface-2);
+  background: var(--glass-bg);
   border-color: var(--line);
   color: var(--fg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge);
 }
 
 .btn-sm { padding: 0.55rem 1.05rem; font-size: 0.85rem; }
@@ -299,9 +373,12 @@ strong { color: var(--fg); font-weight: 600; }
   align-items: center;
   gap: 0.5rem;
   padding: 0.35rem 0.85rem;
-  background: var(--surface-2);
+  background: var(--glass-sheen), var(--glass-bg);
   border: 1px solid var(--line);
   border-radius: var(--r-full);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge);
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--fg-secondary);
@@ -324,20 +401,36 @@ strong { color: var(--fg); font-weight: 600; }
 }
 
 /* --- Tarjetas --- */
+/*
+  Cristal esmerilado. El "vidrio" son tres capas superpuestas:
+  1. --glass-sheen : reflejo de luz cenital en el borde superior
+  2. --glass-bg    : tinte translúcido
+  3. backdrop-filter: desenfoque de lo que pasa por detrás (la atmósfera)
+  Más el hairline interior (--glass-edge) que simula el canto del vidrio.
+*/
 .card {
-  background: var(--surface-2);
+  background: var(--glass-sheen), var(--glass-bg);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
   padding: clamp(1.5rem, 3vw, 2rem);
   position: relative;
-  transition: border-color var(--t-base), background var(--t-base), transform var(--t-base);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge), var(--depth-ambient);
+  transition: border-color var(--t-base), background var(--t-base),
+              transform var(--t-base), box-shadow var(--t-base);
 }
 
 @media (hover: hover) {
+  /* Elevación 3D suave + subida de luz en el cristal. */
   .card.interactive:hover {
     border-color: var(--line-strong);
-    background: var(--surface-hover);
-    transform: translateY(-2px);
+    background: var(--glass-sheen), var(--glass-bg-hover);
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      var(--depth-lifted),
+      0 0 48px -22px var(--glow-accent-soft);
   }
 }
 
@@ -350,14 +443,23 @@ strong { color: var(--fg); font-weight: 600; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: saturate(180%) blur(14px);
-  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(0, 0, 0, 0.62);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--t-base), background var(--t-base);
+  transition: border-color var(--t-base), background var(--t-base), box-shadow var(--t-base);
 }
 
-.site-header.is-stuck { border-bottom-color: var(--line); background: rgba(0, 0, 0, 0.86); }
+/* Al despegarse, el cristal se cierra y aparece un filo de luz inferior. */
+.site-header.is-stuck {
+  border-bottom-color: var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 60%),
+    rgba(0, 0, 0, 0.82);
+  box-shadow: 0 1px 0 0 rgba(56, 189, 248, 0.10), 0 12px 32px -24px rgba(0, 0, 0, 1);
+}
 
 .nav {
   display: flex;
@@ -436,7 +538,10 @@ strong { color: var(--fg); font-weight: 600; }
   margin-top: clamp(3rem, 7vw, 5rem);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  background: var(--surface-2);
+  background: var(--glass-sheen), var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge), var(--depth-ambient);
   overflow: hidden;
 }
 
@@ -448,7 +553,44 @@ strong { color: var(--fg); font-weight: 600; }
 /* --- Comparativa --- */
 .compare-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 
-.compare-card.win { border-color: var(--accent-line); background: linear-gradient(180deg, rgba(56, 189, 248, 0.045), transparent 55%); }
+/* Tarjeta "dolor": glow blanco muy tenue, se mantiene en segundo plano. */
+.compare-card {
+  box-shadow:
+    var(--glass-edge),
+    var(--depth-ambient),
+    0 0 70px -34px var(--glow-white);
+}
+
+/* Tarjeta "solución": glow ice blue. Es la que tiene que ganar la mirada. */
+.compare-card.win {
+  border-color: var(--accent-line);
+  background:
+    var(--glass-sheen),
+    linear-gradient(180deg, rgba(56, 189, 248, 0.055), transparent 55%),
+    var(--glass-bg);
+  box-shadow:
+    inset 0 1px 0 0 rgba(125, 211, 252, 0.16),
+    var(--depth-ambient),
+    0 0 80px -28px var(--glow-accent-soft);
+}
+
+@media (hover: hover) {
+  .compare-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--line-strong);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+      var(--depth-lifted),
+      0 0 80px -30px var(--glow-white);
+  }
+  .compare-card.win:hover {
+    border-color: rgba(56, 189, 248, 0.42);
+    box-shadow:
+      inset 0 1px 0 0 rgba(125, 211, 252, 0.26),
+      var(--depth-lifted),
+      0 0 90px -20px var(--glow-accent);
+  }
+}
 
 .card-tag {
   display: inline-block;
@@ -538,7 +680,16 @@ strong { color: var(--fg); font-weight: 600; }
   padding: clamp(1.5rem, 3vw, 2rem) 1.25rem;
   border-radius: var(--r-lg);
   border: 1px solid var(--line);
-  background: var(--surface-1);
+  /* Glow rojo desaturado: la cifra de pérdida tiene que doler visualmente. */
+  background:
+    var(--glass-sheen),
+    radial-gradient(90% 70% at 50% 0%, rgba(248, 113, 113, 0.07) 0%, transparent 65%),
+    rgba(10, 10, 10, 0.72);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 0 60px -30px rgba(248, 113, 113, 0.35);
 }
 
 .calc-out-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); font-weight: 600; }
@@ -575,6 +726,19 @@ strong { color: var(--fg); font-weight: 600; }
   border: 1px solid var(--accent-line);
   color: var(--accent);
   margin-bottom: 1.15rem;
+  box-shadow:
+    inset 0 1px 0 0 rgba(125, 211, 252, 0.22),
+    0 0 24px -8px var(--glow-accent-soft);
+  transition: box-shadow var(--t-base), transform var(--t-base);
+}
+
+@media (hover: hover) {
+  .card.interactive:hover .pillar-icon {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 0 rgba(125, 211, 252, 0.35),
+      0 0 32px -6px var(--glow-accent);
+  }
 }
 
 .pillar-icon svg { width: 19px; height: 19px; }
@@ -600,7 +764,14 @@ strong { color: var(--fg); font-weight: 600; }
   gap: 1.25rem;
   align-items: start;
   border-color: var(--line-strong);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+  background:
+    var(--glass-sheen),
+    linear-gradient(180deg, rgba(52, 211, 153, 0.045), transparent 60%),
+    var(--glass-bg);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.11),
+    var(--depth-ambient),
+    0 0 70px -32px rgba(52, 211, 153, 0.22);
 }
 
 .guarantee-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: var(--r-md); background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.22); color: var(--positive); }
@@ -614,8 +785,15 @@ strong { color: var(--fg); font-weight: 600; }
   border-radius: var(--r-xl);
   border: 1px solid var(--line);
   background:
-    radial-gradient(70% 120% at 50% 0%, rgba(56, 189, 248, 0.09) 0%, transparent 62%),
-    var(--surface-1);
+    var(--glass-sheen),
+    radial-gradient(70% 120% at 50% 0%, rgba(56, 189, 248, 0.11) 0%, transparent 62%),
+    rgba(10, 10, 10, 0.6);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 0 rgba(125, 211, 252, 0.14),
+    var(--depth-ambient),
+    0 0 100px -30px var(--glow-accent-soft);
 }
 
 .final-cta .section-title { margin-bottom: 1rem; }
@@ -634,10 +812,13 @@ strong { color: var(--fg); font-weight: 600; }
   left: 0; right: 0; bottom: 0;
   z-index: 120;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 40%),
+    rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-top: 1px solid var(--line);
+  box-shadow: 0 -1px 0 0 rgba(56, 189, 248, 0.10), 0 -16px 40px -24px rgba(0, 0, 0, 1);
   transform: translateY(115%);
   transition: transform 0.4s var(--ease-out);
   display: none;
@@ -667,6 +848,41 @@ strong { color: var(--fg); font-weight: 600; }
     transition-duration: 0.001ms !important;
   }
   .reveal { opacity: 1; transform: none; }
+
+  /* La atmósfera se congela en una composición estable y equilibrada. */
+  .atmosphere::before,
+  .atmosphere::after {
+    animation: none !important;
+    will-change: auto;
+    opacity: 0.85;
+  }
+}
+
+/*
+  COSTO DE BACKDROP-FILTER
+  El desenfoque de fondo escala con radio x área y se recalcula en cada
+  frame de scroll. En gama media dentro del navegador in-app eso se come
+  el presupuesto de 16 ms. Bajamos el radio en pantallas chicas: el look
+  de cristal lo sostienen el tinte y el hairline, no el radio del blur.
+*/
+@media (max-width: 720px) {
+  :root { --glass-blur: blur(10px) saturate(140%); }
+  .site-header { backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); }
+  .mobile-cta  { backdrop-filter: blur(14px) saturate(150%);  -webkit-backdrop-filter: blur(14px) saturate(150%); }
+  /* El pill del header está oculto en móvil: no paga blur al pedo. */
+  .pill { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+/*
+  Si el navegador no soporta backdrop-filter (in-app viejos de Android),
+  el cristal degrada a superficie sólida en vez de quedar transparente
+  y con el texto ilegible sobre la atmósfera.
+*/
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .card, .proof, .pill, .btn-ghost { background: var(--glass-sheen), var(--surface-1); }
+  .calc-out, .final-cta { background: var(--glass-sheen), var(--surface-1); }
+  .site-header { background: rgba(0, 0, 0, 0.94); }
+  .mobile-cta  { background: rgba(0, 0, 0, 0.96); }
 }
 
 /* --------------------------------------------------------------------------
