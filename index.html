@@ -30,6 +30,9 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"></noscript>
 
+  <!-- Marca .js antes del primer paint: el hero solo se oculta si hay JS que lo revele. -->
+  <script>document.documentElement.classList.add('js');</script>
+
 <style>
 /* ==========================================================================
    PATOCREANDO - Design System
@@ -529,6 +532,121 @@ strong { color: var(--fg); font-weight: 600; }
   text-align: center;
 }
 
+/*
+  VIDEO DE FONDO DEL HERO
+  El video vive debajo del contenido y por encima de la atmósfera fija.
+  Nunca a full brillo: la dirección de arte es negro cálido con un único
+  acento, así que el clip entra desaturado y al 32% de opacidad, más como
+  textura de profundidad que como "un video pegado atrás".
+*/
+.hero { overflow: hidden; isolation: isolate; }
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg-deep);
+}
+
+/*
+  El poster de respaldo: lo único que se ve en móvil, con reduced-motion o
+  si el video falla. Va con el mismo tratamiento y la misma opacidad que el
+  clip, para que el hero pese igual en todos los estados.
+*/
+.hero-media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("assets/images/hero-poster-studio.jpg") center / cover no-repeat;
+  filter: contrast(112%) brightness(66%) saturate(78%);
+  opacity: 0.32;
+  transition: opacity 0.4s ease;
+}
+
+/*
+  Si el video sí va a reproducirse, el poster se apaga: si no, el fondo ya
+  estaría al 32% antes de tiempo y el fade-in del clip no se vería.
+*/
+.hero-media.is-video-active::before { opacity: 0; }
+
+.hero-video {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Los azules del clip se llevan bien con --accent; el desaturado evita
+     que compitan con el único punto de color de la página. */
+  filter: contrast(112%) brightness(66%) saturate(78%);
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-video.is-ready { opacity: 0.32; }
+
+/*
+  Fundido del loop. Va DESPUÉS de .is-ready a propósito: misma
+  especificidad, gana por orden de fuente cuando el clip vuelve a cero.
+*/
+.hero-video.is-quick  { transition-duration: 0.4s; transition-timing-function: linear; }
+.hero-video.is-looping { opacity: 0; }
+
+/*
+  Dos capas sobre el video. El degradé sostiene el contraste del titular y
+  funde el borde inferior con el fondo de la página (si no, se ve el corte
+  recto del <video> justo encima del hairline de la sección siguiente).
+*/
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      var(--bg-deep) 0%,
+      rgba(16, 16, 17, 0.62) 26%,
+      rgba(16, 16, 17, 0.58) 62%,
+      var(--bg) 100%);
+}
+
+/* Viñeta: bordes cerrados, centro despejado donde vive el titular. */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse 76% 66% at 50% 44%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.22) 58%,
+    rgba(0, 0, 0, 0.72) 100%);
+}
+
+/*
+  El contenido entra un beat después del video, no todo junto. El estado
+  oculto se aplica solo bajo .js: si el script no corre, el hero se pinta
+  visible en vez de quedar en blanco esperando una clase que no llega.
+*/
+.hero > .container { position: relative; z-index: 3; }
+
+.js .hero > .container {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js .hero > .container.is-revealed { opacity: 1; transform: none; }
+
+/*
+  Sobre el video el subtítulo perdía cuerpo: se sube un escalón de gris y
+  se le da una sombra suave. La paleta no cambia, cambia el valor.
+*/
+.hero-sub { text-shadow: 0 1px 20px rgba(0, 0, 0, 0.55); }
+.hero-title { text-shadow: 0 2px 30px rgba(0, 0, 0, 0.45); }
+
 .hero-title {
   /* Techo en ~52px, no 68px. El titular deja de competir con la marca. */
   font-size: clamp(2.1rem, 4.8vw, 3.25rem);
@@ -996,6 +1114,10 @@ strong { color: var(--fg); font-weight: 600; }
   }
   .reveal { opacity: 1; transform: none; }
 
+  /* Nada de autoplay: queda el poster fijo y el contenido visible de una. */
+  .hero-video { display: none; }
+  .js .hero > .container { opacity: 1; transform: none; transition: none; }
+
   /* La atmósfera se congela en una composición estable y equilibrada. */
   .atmosphere::before,
   .atmosphere::after {
@@ -1066,6 +1188,20 @@ strong { color: var(--fg); font-weight: 600; }
   .section-light { margin-inline: 0.75rem; }
 }
 
+/*
+  MÓVIL: EL VIDEO NO SE DESCARGA
+  1.7 MB de clip decorativo contra un presupuesto de <0.6 s en el navegador
+  in-app de Instagram no cierra por ningún lado, y encima se paga con datos
+  del visitante. Abajo de 768px queda el poster (31 KB) como fondo y listo:
+  el src recién se asigna por JS cuando corresponde, así que el archivo ni
+  se pide. Misma decisión que el resto del sitio con backdrop-filter:
+  el efecto se degrada antes que el rendimiento.
+*/
+@media (max-width: 768px) {
+  .hero-video { display: none; }
+  .hero-media { background-position: center 30%; }
+}
+
 @media (max-width: 400px) {
   .nav-actions .btn span { display: none; }
   .nav-actions .btn { padding: 0.55rem 0.7rem; }
@@ -1109,6 +1245,21 @@ strong { color: var(--fg); font-weight: 600; }
        HERO
        ======================================================================== -->
   <section class="section hero" aria-labelledby="hero-title">
+    <!--
+      Fondo cinematográfico. El src va en data-src: lo asigna el JS solo si
+      el contexto lo justifica (desktop, sin reduced-motion, sin ahorro de
+      datos). Sin eso, el navegador queda con el poster y no baja nada.
+    -->
+    <div class="hero-media" aria-hidden="true">
+      <video class="hero-video" id="heroVideo"
+             data-src="assets/videos/hero-bg-studio.mp4"
+             poster="assets/images/hero-poster-studio.jpg"
+             muted loop playsinline preload="none"
+             tabindex="-1" aria-hidden="true"></video>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+
     <div class="container">
       <span class="eyebrow">Estrategia humana + Orquestación de IA</span>
 
@@ -1654,7 +1805,92 @@ strong { color: var(--fg); font-weight: 600; }
   }
 
   /* ----------------------------------------------------------------------
-     6. Detalles
+     6. Video de fondo del hero
+     Entra con un fade de 1.2 s recién cuando hay frame disponible
+     (loadeddata) y el contenido lo sigue medio segundo después, para que la
+     lectura no arranque sobre un fondo que todavía está apareciendo.
+     ---------------------------------------------------------------------- */
+  (function () {
+    var heroVideo   = document.getElementById('heroVideo');
+    var heroContent = document.querySelector('.hero > .container');
+    if (!heroContent) return;
+
+    function revealHero() { heroContent.classList.add('is-revealed'); }
+
+    /*
+      Tres razones para no reproducir: el usuario pidió menos movimiento,
+      la pantalla es chica (el clip pesa 1.7 MB) o el sistema declaró ahorro
+      de datos. En los tres casos el poster ya está pintado por CSS.
+    */
+    var conn     = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var saveData = !!(conn && conn.saveData);
+    var isSmall  = window.matchMedia('(max-width: 768px)').matches;
+
+    if (!heroVideo || reduceMotion || isSmall || saveData) {
+      revealHero();
+      return;
+    }
+
+    /*
+      Red de seguridad: si el video no carga (404, códec, in-app raro), el
+      titular no puede quedarse invisible esperando un evento que no llega.
+    */
+    var heroFallback = setTimeout(revealHero, 2200);
+
+    heroVideo.addEventListener('loadeddata', function () {
+      clearTimeout(heroFallback);
+      heroVideo.classList.add('is-ready');
+      setTimeout(revealHero, 450);
+    }, { once: true });
+
+    heroVideo.addEventListener('error', function () {
+      clearTimeout(heroFallback);
+      // Vuelve el poster: el hero no se queda en negro.
+      var media = heroVideo.parentNode;
+      if (media) media.classList.remove('is-video-active');
+      revealHero();
+    });
+
+    /*
+      El corte del loop se nota como un salto seco. Bajamos la opacidad al
+      final del ciclo y la subimos al arrancar el siguiente. Solo toca
+      opacity: lo resuelve el compositor, sin repaint.
+
+      El umbral de salida es 0.6 s y no 0.4 s a propósito: timeupdate no es
+      un reloj fino, dispara cada ~250 ms. Con 0.4 s el evento llegaba a
+      ~0.15 s del final y la transición se cortaba a mitad de camino, que es
+      justo el salto que queríamos tapar. 0.6 s le da margen para completar
+      el fundido de 0.4 s antes de que el clip vuelva a cero.
+    */
+    var LOOP_FADE_OUT = 0.6;
+    var LOOP_FADE_IN  = 0.4;
+
+    heroVideo.addEventListener('timeupdate', function () {
+      var dur = heroVideo.duration;
+      if (!dur || !isFinite(dur)) return;
+      var t = heroVideo.currentTime;
+
+      if (dur - t < LOOP_FADE_OUT) {
+        heroVideo.classList.add('is-quick', 'is-looping');
+      } else if (t < LOOP_FADE_IN) {
+        heroVideo.classList.add('is-quick');
+        heroVideo.classList.remove('is-looping');
+      } else {
+        heroVideo.classList.remove('is-quick');
+      }
+    });
+
+    // Recién acá se pide el archivo.
+    var heroMedia = heroVideo.parentNode;
+    if (heroMedia) heroMedia.classList.add('is-video-active');
+    heroVideo.src = heroVideo.getAttribute('data-src');
+    var playing = heroVideo.play();
+    // Safari/in-app pueden rechazar el autoplay: el contenido entra igual.
+    if (playing && playing.catch) { playing.catch(revealHero); }
+  })();
+
+  /* ----------------------------------------------------------------------
+     7. Detalles
      ---------------------------------------------------------------------- */
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
