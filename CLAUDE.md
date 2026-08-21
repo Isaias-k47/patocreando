@@ -134,17 +134,48 @@ Patrones ya aplicados, seguí la misma línea:
 Capas, de atrás hacia adelante: `.hero-media` (poster de respaldo en `::before`)
 → `.hero-video` → `.hero-overlay` (degradé) → `.hero-vignette` → `.hero > .container`.
 
-- **La intensidad se calibra con tres tokens en `:root`, no editando las reglas:**
-  `--hero-video-opacity` (0.32 por defecto), `--hero-video-filter` y
-  `--hero-vignette-max` (0.72). Los consumen el clip, el poster de respaldo y la
-  viñeta a la vez, así que se tunean en vivo desde DevTools y los tres estados del
-  hero quedan coherentes solos.
-- El clip entra **desaturado y translúcido**. A brillo pleno los azules del estudio
-  compiten con `--accent`, que es el único color de la página. Funciona como
-  textura de profundidad, no como fondo protagonista.
-- Si subís `--hero-video-opacity` por encima de ~0.5, **subí también
-  `--hero-vignette-max`**: son contrapeso uno del otro. Sin eso el titular empieza
-  a pelearse con la cara del personaje y el CTA pierde contraste.
+- **La intensidad se calibra con cuatro tokens en `:root`, no editando las
+  reglas:** `--hero-video-opacity` (0.60), `--hero-video-filter`,
+  `--hero-overlay-strength` (0.30) y `--hero-vignette-max` (0.84). Los consumen el
+  clip, el poster de respaldo y la viñeta a la vez, así que se tunean en vivo desde
+  DevTools y los tres estados del hero quedan coherentes solos.
+- **`--hero-overlay-strength` es el lever dominante, no la opacidad.** El velo
+  plano estaba en 0.60 y era lo que aplastaba el clip: bajarlo a 0.30 duplicó la
+  presencia del video a opacidad constante, con un costo de contraste
+  despreciable. Si el video se ve apagado, mirá acá antes que la opacidad.
+- Arriba el overlay va casi opaco (0.92) porque **ahí el clip ya es negro**
+  (luminancia 2-30 sobre 255): no se pierde imagen y el header gana fondo estable.
+- El clip entra desaturado: a brillo pleno los azules del estudio compiten con
+  `--accent`, que es el único color de la página.
+
+### Cómo se eligieron esos valores
+
+Se compositaron tres frames del clip (t=2/5/8 s) aplicando filtro + opacidad +
+overlay + viñeta, y se calculó **contraste WCAG contra el color real de cada
+bloque de texto** del hero. Resultado con los valores actuales:
+
+| Zona | Contraste |
+|---|---|
+| microcopy (13px gris) | **5.55:1** ← la que primero se rompe |
+| subtítulo | 6.65:1 |
+| eyebrow | 7.96:1 |
+| titular | 7.84:1 |
+| CTA | 8.74:1 |
+| proof | 18.20:1 |
+
+AA pide 4.5:1. El margen extra es deliberado: el fondo se mueve, y texto sobre
+video pide más aire que sobre un fondo fijo.
+
+**Si tocás cualquiera de los cuatro tokens, la zona que primero cae es el
+microcopy.** Verificá ahí antes que en el titular, que tiene el doble de margen.
+Datos medidos: `brightness` a 0.85 lo tira abajo de 5:1; opacidad 0.80+ rompe AA.
+
+Un "pocket" oscuro detrás del bloque de texto se probó y **se descartó**: bajaba
+la presencia del video un 20% y mejoraba el contraste 0.03. No compensa.
+
+El clip ya tiene movimiento de cámara propio y creciente (diferencia entre frames
+de 1.9 a 5.5 sobre el final), así que **no le agregues un zoom lento tipo Ken
+Burns**: es redundante y marea.
 - **Fade-in de 1.2 s** al evento `loadeddata`; el contenido entra 450 ms después,
   nunca junto con el video.
 - El `.hero-overlay` además funde el borde inferior con el fondo: sin eso se ve el
