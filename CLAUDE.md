@@ -196,6 +196,13 @@ Burns**: es redundante y marea.
 - Red de seguridad de 2.2 s y handler de `error`: si el video no carga (404,
   códec, WebView raro), el titular no puede quedarse invisible esperando un
   evento que no llega.
+- **Las tres condiciones se guardan como `MediaQueryList`, no como booleanos.**
+  Cambian en caliente: maximizar la ventana cruza el corte de 768px y activar las
+  animaciones del sistema apaga `reduced-motion`. Leídas una sola vez al cargar,
+  el hero se quedaba con el poster para siempre aunque la condición que lo
+  bloqueaba ya no existiera. Hay listeners de `change` que reevalúan: arrancan el
+  video si se destraba y lo frenan si aparece la condición (respetar
+  `reduced-motion` solo al cargar no sería respetarlo).
 
 ---
 

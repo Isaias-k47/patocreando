@@ -1856,57 +1856,48 @@ strong { color: var(--fg); font-weight: 600; }
     var heroContent = document.querySelector('.hero > .container');
     if (!heroContent) return;
 
-    function revealHero() { heroContent.classList.add('is-revealed'); }
-
-    /*
-      Tres razones para no reproducir: el usuario pidió menos movimiento,
-      la pantalla es chica (el clip pesa 1.7 MB) o el sistema declaró ahorro
-      de datos. En los tres casos el poster ya está pintado por CSS.
-    */
-    var conn     = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    var saveData = !!(conn && conn.saveData);
-    var isSmall  = window.matchMedia('(max-width: 768px)').matches;
-
-    if (!heroVideo || reduceMotion || isSmall || saveData) {
-      revealHero();
-      return;
+    var revelado = false;
+    function revealHero() {
+      if (revelado) return;
+      revelado = true;
+      heroContent.classList.add('is-revealed');
     }
 
     /*
-      Red de seguridad: si el video no carga (404, códec, in-app raro), el
-      titular no puede quedarse invisible esperando un evento que no llega.
+      Tres razones para no reproducir: el usuario pidio menos movimiento, la
+      pantalla es chica (el clip pesa 1.7 MB) o el sistema declaro ahorro de
+      datos. En los tres casos el poster ya esta pintado por CSS.
+
+      Se guardan como MediaQueryList y no como booleanos porque las tres
+      condiciones cambian en caliente: maximizar la ventana cruza el corte de
+      768px, y activar las animaciones del sistema apaga reduced-motion. Con
+      un booleano leido una sola vez al cargar, el hero se quedaba con el
+      poster para siempre aunque la condicion que lo bloqueaba ya no
+      existiera, y no habia forma de recuperarlo sin recargar.
     */
-    var heroFallback = setTimeout(revealHero, 2200);
+    var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var mqChica  = window.matchMedia('(max-width: 768px)');
+    var conn     = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 
-    heroVideo.addEventListener('loadeddata', function () {
-      clearTimeout(heroFallback);
-      heroVideo.classList.add('is-ready');
-      setTimeout(revealHero, 450);
-    }, { once: true });
+    function bloqueado() {
+      return !heroVideo || mqReduce.matches || mqChica.matches || !!(conn && conn.saveData);
+    }
 
-    heroVideo.addEventListener('error', function () {
-      clearTimeout(heroFallback);
-      // Vuelve el poster: el hero no se queda en negro.
-      var media = heroVideo.parentNode;
-      if (media) media.classList.remove('is-video-active');
-      revealHero();
-    });
+    var LOOP_FADE_OUT = 0.6;
+    var LOOP_FADE_IN  = 0.4;
 
     /*
       El corte del loop se nota como un salto seco. Bajamos la opacidad al
       final del ciclo y la subimos al arrancar el siguiente. Solo toca
       opacity: lo resuelve el compositor, sin repaint.
 
-      El umbral de salida es 0.6 s y no 0.4 s a propósito: timeupdate no es
-      un reloj fino, dispara cada ~250 ms. Con 0.4 s el evento llegaba a
-      ~0.15 s del final y la transición se cortaba a mitad de camino, que es
-      justo el salto que queríamos tapar. 0.6 s le da margen para completar
-      el fundido de 0.4 s antes de que el clip vuelva a cero.
+      El umbral de salida es 0.6 s y no 0.4 s a proposito: timeupdate no es un
+      reloj fino, dispara cada ~250 ms. Con 0.4 s el evento llegaba a ~0.15 s
+      del final y la transicion se cortaba a mitad de camino, que es justo el
+      salto que queriamos tapar. 0.6 s le da margen para completar el fundido
+      de 0.4 s antes de que el clip vuelva a cero.
     */
-    var LOOP_FADE_OUT = 0.6;
-    var LOOP_FADE_IN  = 0.4;
-
-    heroVideo.addEventListener('timeupdate', function () {
+    function onTimeUpdate() {
       var dur = heroVideo.duration;
       if (!dur || !isFinite(dur)) return;
       var t = heroVideo.currentTime;
@@ -1919,15 +1910,71 @@ strong { color: var(--fg); font-weight: 600; }
       } else {
         heroVideo.classList.remove('is-quick');
       }
-    });
+    }
 
-    // Recién acá se pide el archivo.
-    var heroMedia = heroVideo.parentNode;
-    if (heroMedia) heroMedia.classList.add('is-video-active');
-    heroVideo.src = heroVideo.getAttribute('data-src');
-    var playing = heroVideo.play();
-    // Safari/in-app pueden rechazar el autoplay: el contenido entra igual.
-    if (playing && playing.catch) { playing.catch(revealHero); }
+    var iniciado = false;
+
+    function iniciarVideo() {
+      if (iniciado || bloqueado()) return;
+      iniciado = true;
+
+      heroVideo.addEventListener('loadeddata', function () {
+        heroVideo.classList.add('is-ready');
+        // Solo en el arranque inicial: si el video entra tarde (la ventana se
+        // maximizo despues), el texto ya se leyo hace rato y no hay que
+        // hacerlo esperar de nuevo.
+        setTimeout(revealHero, 450);
+      }, { once: true });
+
+      heroVideo.addEventListener('error', function () {
+        // Vuelve el poster: el hero no se queda en negro.
+        heroVideo.parentNode.classList.remove('is-video-active');
+        revealHero();
+      });
+
+      heroVideo.addEventListener('timeupdate', onTimeUpdate);
+
+      // Recien aca se pide el archivo.
+      heroVideo.parentNode.classList.add('is-video-active');
+      heroVideo.src = heroVideo.getAttribute('data-src');
+
+      var playing = heroVideo.play();
+      // Safari/in-app pueden rechazar el autoplay: el contenido entra igual.
+      if (playing && playing.catch) { playing.catch(revealHero); }
+    }
+
+    function detenerVideo() {
+      if (!iniciado) return;
+      // Si la condicion aparece despues (activaste reduced-motion con la
+      // pagina abierta), el video se frena y vuelve el poster. Respetar la
+      // preferencia solo al cargar no seria respetarla.
+      heroVideo.pause();
+      heroVideo.classList.remove('is-ready', 'is-quick', 'is-looping');
+      heroVideo.parentNode.classList.remove('is-video-active');
+      revealHero();
+    }
+
+    function reevaluar() {
+      if (bloqueado()) { detenerVideo(); } else { iniciarVideo(); }
+    }
+
+    // addListener esta deprecado pero es lo unico que entienden los WebViews
+    // viejos de Android, que son el caso que manda en este proyecto.
+    function escuchar(mq, fn) {
+      if (mq.addEventListener) { mq.addEventListener('change', fn); }
+      else if (mq.addListener) { mq.addListener(fn); }
+    }
+    escuchar(mqReduce, reevaluar);
+    escuchar(mqChica, reevaluar);
+
+    /*
+      Red de seguridad: si el video no carga (404, codec, WebView raro), el
+      titular no puede quedarse invisible esperando un evento que no llega.
+      Si esta bloqueado de entrada, el contenido entra de una.
+    */
+    if (bloqueado()) { revealHero(); } else { setTimeout(revealHero, 2200); }
+
+    iniciarVideo();
   })();
 
   /* ----------------------------------------------------------------------
