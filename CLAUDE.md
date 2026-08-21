@@ -134,10 +134,17 @@ Patrones ya aplicados, seguí la misma línea:
 Capas, de atrás hacia adelante: `.hero-media` (poster de respaldo en `::before`)
 → `.hero-video` → `.hero-overlay` (degradé) → `.hero-vignette` → `.hero > .container`.
 
-- El clip entra **desaturado al 32% de opacidad**
-  (`contrast(112%) brightness(66%) saturate(78%)`). A brillo pleno los azules del
-  estudio compiten con `--accent`, que es el único color de la página. Funciona
-  como textura de profundidad, no como fondo protagonista.
+- **La intensidad se calibra con tres tokens en `:root`, no editando las reglas:**
+  `--hero-video-opacity` (0.32 por defecto), `--hero-video-filter` y
+  `--hero-vignette-max` (0.72). Los consumen el clip, el poster de respaldo y la
+  viñeta a la vez, así que se tunean en vivo desde DevTools y los tres estados del
+  hero quedan coherentes solos.
+- El clip entra **desaturado y translúcido**. A brillo pleno los azules del estudio
+  compiten con `--accent`, que es el único color de la página. Funciona como
+  textura de profundidad, no como fondo protagonista.
+- Si subís `--hero-video-opacity` por encima de ~0.5, **subí también
+  `--hero-vignette-max`**: son contrapeso uno del otro. Sin eso el titular empieza
+  a pelearse con la cara del personaje y el CTA pierde contraste.
 - **Fade-in de 1.2 s** al evento `loadeddata`; el contenido entra 450 ms después,
   nunca junto con el video.
 - El `.hero-overlay` además funde el borde inferior con el fondo: sin eso se ve el

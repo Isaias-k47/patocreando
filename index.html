@@ -105,6 +105,26 @@
   --mist:        rgba(211, 241, 251, 0.30);
   --mist-strong: rgba(211, 241, 251, 0.46);
 
+  /*
+    Hero video - los tres controles de calibracion.
+    Se tunean en vivo desde DevTools (Elements > :root) sin tocar nada mas:
+    los consumen el clip, el poster de respaldo y la vineta.
+
+    --hero-video-opacity  cuanto pesa el video en la composicion.
+                          0.32 = textura de profundidad (Linear/Vercel).
+                          0.50 = se lee la escena, sigue mandando el texto.
+                          0.75+ = protagonista; ahi subi tambien la vineta
+                          o el titular se pelea con la cara del personaje.
+    --hero-video-filter   desatura para que los azules del estudio no
+                          compitan con --accent, el unico color de la pagina.
+    --hero-vignette-max   opacidad del negro en el borde exterior. Es el
+                          contrapeso: si subis la opacidad del video, subi
+                          esto para no perder contraste en el CTA.
+  */
+  --hero-video-opacity: 0.32;
+  --hero-video-filter:  contrast(112%) brightness(66%) saturate(78%);
+  --hero-vignette-max:  0.72;
+
   /* Tipografía */
   --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
@@ -537,8 +557,9 @@ strong { color: var(--fg); font-weight: 600; }
   VIDEO DE FONDO DEL HERO
   El video vive debajo del contenido y por encima de la atmósfera fija.
   Nunca a full brillo: la dirección de arte es negro cálido con un único
-  acento, así que el clip entra desaturado y al 32% de opacidad, más como
-  textura de profundidad que como "un video pegado atrás".
+  acento, así que el clip entra desaturado y translúcido, más como textura
+  de profundidad que como "un video pegado atrás". La intensidad se calibra
+  con los tokens --hero-video-* de :root, no tocando estas reglas.
 */
 .hero { overflow: hidden; isolation: isolate; }
 
@@ -561,8 +582,8 @@ strong { color: var(--fg); font-weight: 600; }
   position: absolute;
   inset: 0;
   background: url("assets/images/hero-poster-studio.jpg") center / cover no-repeat;
-  filter: contrast(112%) brightness(66%) saturate(78%);
-  opacity: 0.32;
+  filter: var(--hero-video-filter);
+  opacity: var(--hero-video-opacity);
   transition: opacity 0.4s ease;
 }
 
@@ -579,14 +600,12 @@ strong { color: var(--fg); font-weight: 600; }
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Los azules del clip se llevan bien con --accent; el desaturado evita
-     que compitan con el único punto de color de la página. */
-  filter: contrast(112%) brightness(66%) saturate(78%);
+  filter: var(--hero-video-filter);
   opacity: 0;
   transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hero-video.is-ready { opacity: 0.32; }
+.hero-video.is-ready { opacity: var(--hero-video-opacity); }
 
 /*
   Fundido del loop. Va DESPUÉS de .is-ready a propósito: misma
@@ -622,7 +641,7 @@ strong { color: var(--fg); font-weight: 600; }
   background: radial-gradient(ellipse 76% 66% at 50% 44%,
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.22) 58%,
-    rgba(0, 0, 0, 0.72) 100%);
+    rgba(0, 0, 0, var(--hero-vignette-max)) 100%);
 }
 
 /*
