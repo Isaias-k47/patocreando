@@ -595,7 +595,7 @@ strong { color: var(--fg); font-weight: 600; }
   content: '';
   position: absolute;
   inset: 0;
-  background: url("assets/images/hero-poster-studio.jpg") center / cover no-repeat;
+  background: url("assets/images/hero-studio-loop-poster.jpg") center / cover no-repeat;
   filter: var(--hero-video-filter);
   opacity: var(--hero-video-opacity);
   transition: opacity 0.4s ease;
@@ -1293,8 +1293,8 @@ strong { color: var(--fg); font-weight: 600; }
     -->
     <div class="hero-media" aria-hidden="true">
       <video class="hero-video" id="heroVideo"
-             data-src="assets/videos/hero-bg-studio.mp4"
-             poster="assets/images/hero-poster-studio.jpg"
+             data-src="assets/videos/hero-studio-loop.mp4"
+             poster="assets/images/hero-studio-loop-poster.jpg"
              muted loop playsinline preload="none"
              tabindex="-1" aria-hidden="true"></video>
     </div>
@@ -1932,7 +1932,18 @@ strong { color: var(--fg); font-weight: 600; }
         revealHero();
       });
 
-      heroVideo.addEventListener('timeupdate', onTimeUpdate);
+      /*
+        El fundido del loop solo se engancha si el clip lo necesita.
+        El clip actual es un ping-pong (ida y vuelta): su ultimo frame es
+        identico al primero, diferencia medida 0.4/255. En un loop asi el
+        fundido no tapa nada, al reves: mete un bajon de opacidad donde no
+        habia ningun corte y termina senalando la costura invisible.
+        Si algun dia entra un clip que corta de verdad, se reactiva
+        agregandole data-loop-fade al <video>.
+      */
+      if (heroVideo.hasAttribute('data-loop-fade')) {
+        heroVideo.addEventListener('timeupdate', onTimeUpdate);
+      }
 
       // Recien aca se pide el archivo.
       heroVideo.parentNode.classList.add('is-video-active');

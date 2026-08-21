@@ -16,8 +16,8 @@ en el rendimiento dentro del navegador in-app de Instagram/TikTok.
 
 ```
 index.html            todo: markup + <style> inline + <script> inline
-assets/videos/        hero-bg-studio.mp4 (1.7 MB, 1280x720, 10.04 s, sin audio)
-assets/images/        hero-poster-studio.jpg (31 KB)
+assets/videos/        hero-studio-loop.mp4 (1.4 MB, 1276x720, 12 s, sin audio)
+assets/images/        hero-studio-loop-poster.jpg (41 KB, = frame 0 del clip)
 BUSINESS_STRATEGY.md  ICP, PUV, embudo, tono de marca
 CLAUDE.md             este archivo
 ```
@@ -156,12 +156,11 @@ bloque de texto** del hero. Resultado con los valores actuales:
 
 | Zona | Contraste |
 |---|---|
-| microcopy (13px gris) | **5.55:1** ← la que primero se rompe |
-| subtítulo | 6.65:1 |
-| eyebrow | 7.96:1 |
-| titular | 7.84:1 |
-| CTA | 8.74:1 |
-| proof | 18.20:1 |
+| microcopy (13px gris) | **5.83:1** ← la que primero se rompe |
+| subtítulo | 6.4:1 |
+| titular | ~9:1 |
+| CTA | ~8:1 |
+| proof | ~18:1 |
 
 AA pide 4.5:1. El margen extra es deliberado: el fondo se mueve, y texto sobre
 video pide más aire que sobre un fondo fijo.
@@ -180,10 +179,17 @@ Burns**: es redundante y marea.
   nunca junto con el video.
 - El `.hero-overlay` además funde el borde inferior con el fondo: sin eso se ve el
   corte recto del `<video>` sobre el hairline de la sección siguiente.
-- **Fundido del loop** (~0.4 s) vía `timeupdate`. El umbral de salida es **0.6 s,
-  no 0.4 s**: `timeupdate` dispara cada ~250 ms, así que con 0.4 s el evento
-  llegaba a ~0.15 s del final y la transición se cortaba a mitad de camino —
-  justo el salto que se quería tapar.
+- **El clip es un ping-pong y por eso el fundido del loop está APAGADO.** El
+  archivo son 6 s hacia adelante y los mismos 6 s en reversa, así que su último
+  frame es idéntico al primero (diferencia medida: 0.4/255). En un loop sin
+  costura el fundido no tapa nada — al revés, mete un bajón de opacidad donde no
+  hay corte y termina señalando la costura invisible. El código sigue ahí y se
+  reactiva agregándole `data-loop-fade` al `<video>`, para el día que entre un
+  clip que corte de verdad. Si lo reactivás: el umbral de salida es 0.6 s y no
+  0.4 s, porque `timeupdate` dispara cada ~250 ms y con 0.4 s la transición se
+  corta a mitad de camino, que es justo el salto que se quería tapar.
+- El poster es **el frame 0 del clip**, que en un ping-pong es también el último.
+  Así el arranque del video no produce ningún salto respecto del poster.
 - **El poster de respaldo lleva el mismo filtro y la misma opacidad que el video**,
   y se apaga (`.hero-media.is-video-active::before`) cuando el clip sí va a
   reproducirse. Si no, el fondo ya estaría al 32% antes de tiempo y el fade-in no
